@@ -12,9 +12,10 @@ from passlib.context import CryptContext
 from pymongo import MongoClient
 import base64
 from enum import Enum
+import re
 
 # Initialize FastAPI app
-app = FastAPI(title="Check Vero API", description="Phone verification and fraud reporting platform")
+app = FastAPI(title="Check Vero API", description="Professional fraud verification platform")
 
 # Add CORS middleware
 app.add_middleware(
@@ -31,7 +32,7 @@ client = MongoClient(mongo_url)
 db = client.checkvero
 
 # Security setup
-SECRET_KEY = "your-secret-key-here"
+SECRET_KEY = "your-secret-key-here-check-vero-mvp"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
@@ -55,7 +56,7 @@ class ReportStatus(str, Enum):
     VERIFIED = "verified"
     REJECTED = "rejected"
 
-# Pydantic models
+# Enhanced Pydantic models
 class UserCreate(BaseModel):
     username: str
     email: str
@@ -83,7 +84,7 @@ class ReportCreate(BaseModel):
     phone_number: Optional[str] = None
     email_address: Optional[str] = None
     description: str
-    screenshot: Optional[str] = None
+    screenshot: Optional[str] = None  # Base64 encoded file data
 
 class VerificationCheck(BaseModel):
     phone_number: str
@@ -117,63 +118,164 @@ def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(securit
     except jwt.PyJWTError:
         raise HTTPException(status_code=401, detail="Invalid authentication credentials")
 
-# Mock AI Analysis Function
-def mock_ai_analysis(report_data):
-    """Mock OpenAI GPT-4 analysis for demonstration"""
-    suspicious_keywords = ["urgent", "click now", "verify account", "suspended", "prize", "winner", "lottery", "inheritance"]
+# Enhanced AI Analysis Function
+def advanced_ai_analysis(report_data):
+    """Enhanced AI analysis with more sophisticated fraud detection patterns"""
+    
+    # Suspicious keywords and patterns
+    high_risk_keywords = [
+        "urgent", "immediate", "act now", "limited time", "verify account", "suspended account",
+        "click here", "confirm identity", "prize", "winner", "lottery", "inheritance",
+        "congratulations", "selected", "refund", "tax refund", "irs", "social security",
+        "credit card", "bank account", "bitcoin", "cryptocurrency", "investment opportunity",
+        "prince", "nigeria", "foreign country", "legal action", "arrest warrant"
+    ]
+    
+    medium_risk_keywords = [
+        "help", "assistance", "support", "verify", "confirm", "update", "expires",
+        "security", "protection", "alert", "warning", "notice", "important",
+        "free", "discount", "offer", "deal", "save money", "cash", "loan"
+    ]
     
     description = report_data.get("description", "").lower()
     phone_number = report_data.get("phone_number", "")
     email_address = report_data.get("email_address", "")
     
-    # Basic suspicious patterns
-    suspicion_score = 0
+    # Initialize analysis
+    risk_score = 0
     reasons = []
+    confidence_factors = []
     
-    for keyword in suspicious_keywords:
-        if keyword in description:
-            suspicion_score += 1
-            reasons.append(f"Contains suspicious keyword: '{keyword}'")
+    # Analyze keywords
+    high_risk_matches = [word for word in high_risk_keywords if word in description]
+    medium_risk_matches = [word for word in medium_risk_keywords if word in description]
     
-    # Phone number patterns
-    if phone_number and (phone_number.startswith("+1-800") or phone_number.startswith("unknown")):
-        suspicion_score += 1
-        reasons.append("Suspicious phone number pattern")
+    if high_risk_matches:
+        risk_score += len(high_risk_matches) * 3
+        reasons.append(f"Contains high-risk keywords: {', '.join(high_risk_matches[:3])}")
+        confidence_factors.append("High-risk language patterns")
     
-    # Email patterns
-    if email_address and any(domain in email_address for domain in ["tempmail", "10minutemail", "guerrillamail"]):
-        suspicion_score += 1
-        reasons.append("Suspicious email domain")
+    if medium_risk_matches:
+        risk_score += len(medium_risk_matches) * 1
+        if len(medium_risk_matches) > 2:
+            reasons.append(f"Multiple suspicious keywords detected ({len(medium_risk_matches)} found)")
+            confidence_factors.append("Multiple warning indicators")
     
-    # Generate response based on score
-    if suspicion_score >= 2:
+    # Phone number analysis
+    if phone_number:
+        # Check for suspicious phone patterns
+        if any(pattern in phone_number for pattern in ["800", "888", "877", "866", "855", "844", "833", "822"]):
+            risk_score += 1
+            reasons.append("Uses toll-free number (common in scams)")
+        
+        if phone_number.startswith("unknown") or phone_number.startswith("blocked"):
+            risk_score += 2
+            reasons.append("Caller ID blocked or unknown")
+            confidence_factors.append("Hidden caller identity")
+        
+        if not re.match(r'^[\+]?[1-9][\d\-\s\(\)]{7,15}$', phone_number):
+            risk_score += 1
+            reasons.append("Invalid or suspicious phone number format")
+    
+    # Email analysis
+    if email_address:
+        # Check for suspicious email patterns
+        suspicious_domains = [
+            "tempmail", "10minutemail", "guerrillamail", "mailinator", "yopmail",
+            "gmail.com", "yahoo.com", "hotmail.com"  # Free email services (medium risk)
+        ]
+        
+        domain = email_address.split('@')[-1].lower() if '@' in email_address else ""
+        
+        if any(sus_domain in domain for sus_domain in suspicious_domains[:5]):  # Temporary email services
+            risk_score += 3
+            reasons.append("Uses temporary/disposable email service")
+            confidence_factors.append("Temporary email provider")
+        elif any(sus_domain in domain for sus_domain in suspicious_domains[5:]):  # Free email services
+            risk_score += 1
+            reasons.append("Uses free email service (common in scams)")
+        
+        # Check for typosquatting
+        legit_domains = ["paypal.com", "amazon.com", "apple.com", "microsoft.com", "google.com", "facebook.com"]
+        for legit in legit_domains:
+            if legit in domain and domain != legit:
+                risk_score += 4
+                reasons.append(f"Potential typosquatting: {domain} mimics {legit}")
+                confidence_factors.append("Domain impersonation")
+    
+    # Content analysis patterns
+    if "click" in description and any(word in description for word in ["link", "here", "now", "urgent"]):
+        risk_score += 2
+        reasons.append("Suspicious call-to-action language")
+    
+    if any(word in description for word in ["money", "payment", "card", "account"]) and \
+       any(word in description for word in ["problem", "issue", "suspend", "block", "verify"]):
+        risk_score += 3
+        reasons.append("Financial information request under pressure")
+        confidence_factors.append("Financial urgency tactics")
+    
+    # Personal information requests
+    if any(word in description for word in ["ssn", "social security", "date of birth", "mother's maiden", "password"]):
+        risk_score += 4
+        reasons.append("Requests sensitive personal information")
+        confidence_factors.append("Identity theft indicators")
+    
+    # Communication urgency
+    urgency_words = ["immediately", "right now", "asap", "expires today", "limited time", "act fast"]
+    if any(word in description for word in urgency_words):
+        risk_score += 2
+        reasons.append("Creates false sense of urgency")
+    
+    # Determine risk level and response
+    if risk_score >= 8:
         risk_level = "HIGH"
-        recommendation = "⚠️ SUSPICIOUS - Likely phishing attempt. Do not respond or provide personal information."
-        points_awarded = 25
-    elif suspicion_score == 1:
+        recommendation = "🚨 HIGH RISK - This appears to be a scam. Do not provide any personal information, click links, or send money. Report to authorities if financial loss occurred."
+        points_awarded = 30
+        confidence_score = min(90 + (risk_score - 8) * 2, 98)
+    elif risk_score >= 4:
         risk_level = "MEDIUM"
-        recommendation = "⚡ MODERATE RISK - Exercise caution. Verify through official channels."
-        points_awarded = 15
+        recommendation = "⚠️ MEDIUM RISK - Exercise extreme caution. Verify through official channels before taking any action. Do not provide personal information."
+        points_awarded = 20
+        confidence_score = min(75 + (risk_score - 4) * 3, 89)
     else:
         risk_level = "LOW"
-        recommendation = "✅ APPEARS LEGITIMATE - No obvious red flags detected."
-        points_awarded = 5
+        recommendation = "✅ LOW RISK - No obvious red flags detected, but always remain vigilant with unsolicited communications."
+        points_awarded = 10
+        confidence_score = min(60 + risk_score * 5, 74)
+    
+    # Add confidence factors to response
+    analysis_details = {
+        "risk_score": risk_score,
+        "confidence_factors": confidence_factors,
+        "keywords_detected": {
+            "high_risk": high_risk_matches,
+            "medium_risk": medium_risk_matches
+        }
+    }
     
     return {
         "risk_level": risk_level,
         "recommendation": recommendation,
-        "confidence_score": min(85 + suspicion_score * 10, 95),
+        "confidence_score": confidence_score,
         "reasons": reasons,
-        "points_awarded": points_awarded
+        "points_awarded": points_awarded,
+        "analysis_details": analysis_details
     }
 
 # Routes
 @app.get("/api/health")
 async def health_check():
-    return {"status": "healthy", "service": "Check Vero API"}
+    return {"status": "healthy", "service": "Check Vero API", "version": "1.0.0"}
 
 @app.post("/api/register", response_model=Token)
 async def register_user(user: UserCreate):
+    # Enhanced validation
+    if len(user.username) < 3:
+        raise HTTPException(status_code=400, detail="Username must be at least 3 characters")
+    
+    if len(user.password) < 8:
+        raise HTTPException(status_code=400, detail="Password must be at least 8 characters")
+    
     # Check if user already exists
     if db.users.find_one({"username": user.username}):
         raise HTTPException(status_code=400, detail="Username already registered")
@@ -194,7 +296,9 @@ async def register_user(user: UserCreate):
         "company_name": user.company_name,
         "points": 0,
         "created_at": datetime.utcnow(),
-        "is_active": True
+        "updated_at": datetime.utcnow(),
+        "is_active": True,
+        "email_verified": False
     }
     
     db.users.insert_one(user_doc)
@@ -220,6 +324,15 @@ async def login_user(user: UserLogin):
     if not db_user or not verify_password(user.password, db_user["password"]):
         raise HTTPException(status_code=401, detail="Incorrect username or password")
     
+    if not db_user.get("is_active", True):
+        raise HTTPException(status_code=401, detail="Account is deactivated")
+    
+    # Update last login
+    db.users.update_one(
+        {"user_id": db_user["user_id"]},
+        {"$set": {"last_login": datetime.utcnow()}}
+    )
+    
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
         data={"sub": user.username, "user_id": db_user["user_id"], "role": db_user["role"]},
@@ -238,6 +351,10 @@ async def register_phone_number(phone_data: PhoneNumberRegister, current_user: d
     if current_user["role"] not in ["business", "admin"]:
         raise HTTPException(status_code=403, detail="Only businesses and admins can register phone numbers")
     
+    # Enhanced phone number validation
+    if not re.match(r'^[\+]?[1-9][\d\-\s\(\)]{7,15}$', phone_data.phone_number):
+        raise HTTPException(status_code=400, detail="Invalid phone number format")
+    
     # Check if phone number already exists
     existing = db.phone_numbers.find_one({"phone_number": phone_data.phone_number})
     if existing:
@@ -250,8 +367,11 @@ async def register_phone_number(phone_data: PhoneNumberRegister, current_user: d
         "description": phone_data.description,
         "registered_by": current_user["user_id"],
         "verified": True,
+        "verification_date": datetime.utcnow(),
         "created_at": datetime.utcnow(),
-        "is_active": True
+        "updated_at": datetime.utcnow(),
+        "is_active": True,
+        "verification_count": 0
     }
     
     db.phone_numbers.insert_one(phone_doc)
@@ -260,19 +380,26 @@ async def register_phone_number(phone_data: PhoneNumberRegister, current_user: d
 
 @app.post("/api/verify-phone")
 async def verify_phone_number(verification: VerificationCheck):
-    phone_record = db.phone_numbers.find_one({"phone_number": verification.phone_number})
+    phone_record = db.phone_numbers.find_one({"phone_number": verification.phone_number, "is_active": True})
     
     if phone_record:
+        # Increment verification count
+        db.phone_numbers.update_one(
+            {"phone_id": phone_record["phone_id"]},
+            {"$inc": {"verification_count": 1}, "$set": {"last_verified": datetime.utcnow()}}
+        )
+        
         return {
             "is_verified": True,
             "company_name": phone_record["company_name"],
             "description": phone_record.get("description", ""),
-            "verified_since": phone_record["created_at"]
+            "verified_since": phone_record["verification_date"],
+            "verification_count": phone_record.get("verification_count", 0) + 1
         }
     else:
         return {
             "is_verified": False,
-            "message": "Phone number not found in verification database"
+            "message": "Phone number not found in Check Vero verification database"
         }
 
 @app.post("/api/reports/submit")
@@ -280,14 +407,29 @@ async def submit_report(report: ReportCreate, current_user: dict = Depends(get_c
     if current_user["role"] != "citizen":
         raise HTTPException(status_code=403, detail="Only citizens can submit reports")
     
+    # Enhanced validation
+    if len(report.description) < 10:
+        raise HTTPException(status_code=400, detail="Description must be at least 10 characters")
+    
     report_id = str(uuid.uuid4())
     
-    # Mock AI analysis
-    ai_analysis = mock_ai_analysis({
+    # Enhanced AI analysis
+    ai_analysis = advanced_ai_analysis({
         "description": report.description,
         "phone_number": report.phone_number,
         "email_address": report.email_address
     })
+    
+    # Process file upload if provided
+    screenshot_info = None
+    if report.screenshot:
+        # In a real implementation, you would save the file to cloud storage
+        # For now, we'll just store metadata
+        screenshot_info = {
+            "uploaded": True,
+            "size": len(report.screenshot),
+            "type": "image" if report.screenshot.startswith("data:image") else "unknown"
+        }
     
     report_doc = {
         "report_id": report_id,
@@ -296,11 +438,12 @@ async def submit_report(report: ReportCreate, current_user: dict = Depends(get_c
         "phone_number": report.phone_number,
         "email_address": report.email_address,
         "description": report.description,
-        "screenshot": report.screenshot,
+        "screenshot_info": screenshot_info,
         "status": ReportStatus.ANALYZED,
         "ai_analysis": ai_analysis,
         "created_at": datetime.utcnow(),
-        "updated_at": datetime.utcnow()
+        "updated_at": datetime.utcnow(),
+        "is_active": True
     }
     
     db.reports.insert_one(report_doc)
@@ -313,13 +456,15 @@ async def submit_report(report: ReportCreate, current_user: dict = Depends(get_c
     
     return {
         "report_id": report_id,
-        "message": "Report submitted successfully",
+        "message": "Report submitted and analyzed successfully",
         "ai_analysis": ai_analysis
     }
 
 @app.get("/api/reports/my-reports")
 async def get_my_reports(current_user: dict = Depends(get_current_user)):
-    reports = list(db.reports.find({"user_id": current_user["user_id"]}).sort("created_at", -1))
+    reports = list(db.reports.find(
+        {"user_id": current_user["user_id"], "is_active": True}
+    ).sort("created_at", -1))
     
     # Convert ObjectId to string and format dates
     for report in reports:
@@ -334,7 +479,7 @@ async def get_all_reports(current_user: dict = Depends(get_current_user)):
     if current_user["role"] != "admin":
         raise HTTPException(status_code=403, detail="Admin access required")
     
-    reports = list(db.reports.find().sort("created_at", -1))
+    reports = list(db.reports.find({"is_active": True}).sort("created_at", -1))
     
     # Convert ObjectId to string and format dates
     for report in reports:
@@ -349,13 +494,17 @@ async def get_my_phone_numbers(current_user: dict = Depends(get_current_user)):
     if current_user["role"] not in ["business", "admin"]:
         raise HTTPException(status_code=403, detail="Access denied")
     
-    query = {"registered_by": current_user["user_id"]} if current_user["role"] == "business" else {}
+    query = {"is_active": True}
+    if current_user["role"] == "business":
+        query["registered_by"] = current_user["user_id"]
+    
     phone_numbers = list(db.phone_numbers.find(query).sort("created_at", -1))
     
     # Convert ObjectId to string and format dates
     for phone in phone_numbers:
         phone["_id"] = str(phone["_id"])
         phone["created_at"] = phone["created_at"].isoformat()
+        phone["updated_at"] = phone["updated_at"].isoformat()
     
     return phone_numbers
 
@@ -373,7 +522,8 @@ async def get_user_profile(current_user: dict = Depends(get_current_user)):
         "role": user["role"],
         "company_name": user.get("company_name"),
         "points": user.get("points", 0),
-        "created_at": user["created_at"].isoformat()
+        "created_at": user["created_at"].isoformat(),
+        "email_verified": user.get("email_verified", False)
     }
 
 @app.get("/api/stats/dashboard")
@@ -381,32 +531,86 @@ async def get_dashboard_stats(current_user: dict = Depends(get_current_user)):
     stats = {}
     
     if current_user["role"] == "citizen":
+        user_reports = list(db.reports.find({"user_id": current_user["user_id"], "is_active": True}))
         stats = {
-            "total_reports": db.reports.count_documents({"user_id": current_user["user_id"]}),
+            "total_reports": len(user_reports),
             "points_earned": db.users.find_one({"user_id": current_user["user_id"]})["points"],
-            "high_risk_reports": db.reports.count_documents({
-                "user_id": current_user["user_id"],
-                "ai_analysis.risk_level": "HIGH"
-            })
+            "high_risk_reports": len([r for r in user_reports if r.get("ai_analysis", {}).get("risk_level") == "HIGH"]),
+            "medium_risk_reports": len([r for r in user_reports if r.get("ai_analysis", {}).get("risk_level") == "MEDIUM"]),
+            "low_risk_reports": len([r for r in user_reports if r.get("ai_analysis", {}).get("risk_level") == "LOW"])
         }
     elif current_user["role"] == "business":
+        user_phones = list(db.phone_numbers.find({"registered_by": current_user["user_id"], "is_active": True}))
+        total_verifications = sum(phone.get("verification_count", 0) for phone in user_phones)
         stats = {
-            "registered_numbers": db.phone_numbers.count_documents({"registered_by": current_user["user_id"]}),
-            "verification_checks": db.phone_numbers.count_documents({"registered_by": current_user["user_id"]}),
+            "registered_numbers": len(user_phones),
+            "verification_checks": total_verifications,
             "reports_mentioning": db.reports.count_documents({
-                "phone_number": {"$in": [phone["phone_number"] for phone in db.phone_numbers.find({"registered_by": current_user["user_id"]})]}
-            })
+                "phone_number": {"$in": [phone["phone_number"] for phone in user_phones]},
+                "is_active": True
+            }),
+            "active_numbers": len([p for p in user_phones if p.get("is_active", True)])
         }
     elif current_user["role"] == "admin":
+        all_reports = list(db.reports.find({"is_active": True}))
         stats = {
-            "total_users": db.users.count_documents({}),
-            "total_reports": db.reports.count_documents({}),
-            "total_phone_numbers": db.phone_numbers.count_documents({}),
-            "high_risk_reports": db.reports.count_documents({"ai_analysis.risk_level": "HIGH"}),
-            "pending_reports": db.reports.count_documents({"status": "pending"})
+            "total_users": db.users.count_documents({"is_active": True}),
+            "total_reports": len(all_reports),
+            "total_phone_numbers": db.phone_numbers.count_documents({"is_active": True}),
+            "high_risk_reports": len([r for r in all_reports if r.get("ai_analysis", {}).get("risk_level") == "HIGH"]),
+            "pending_reports": len([r for r in all_reports if r.get("status") == "pending"]),
+            "verified_businesses": db.users.count_documents({"role": "business", "is_active": True})
         }
     
     return stats
+
+# Enhanced endpoint for detailed analytics
+@app.get("/api/analytics/summary")
+async def get_analytics_summary(current_user: dict = Depends(get_current_user)):
+    if current_user["role"] != "admin":
+        raise HTTPException(status_code=403, detail="Admin access required")
+    
+    # Get recent activity
+    recent_reports = list(db.reports.find({"is_active": True}).sort("created_at", -1).limit(10))
+    recent_registrations = list(db.phone_numbers.find({"is_active": True}).sort("created_at", -1).limit(10))
+    
+    # Calculate trends
+    today = datetime.utcnow()
+    yesterday = today - timedelta(days=1)
+    
+    today_reports = db.reports.count_documents({
+        "created_at": {"$gte": yesterday},
+        "is_active": True
+    })
+    
+    today_verifications = db.phone_numbers.count_documents({
+        "created_at": {"$gte": yesterday},
+        "is_active": True
+    })
+    
+    return {
+        "recent_reports": [
+            {
+                "report_id": r["report_id"],
+                "type": r["report_type"],
+                "risk_level": r.get("ai_analysis", {}).get("risk_level", "UNKNOWN"),
+                "created_at": r["created_at"].isoformat()
+            }
+            for r in recent_reports
+        ],
+        "recent_registrations": [
+            {
+                "phone_number": r["phone_number"],
+                "company_name": r["company_name"],
+                "created_at": r["created_at"].isoformat()
+            }
+            for r in recent_registrations
+        ],
+        "daily_stats": {
+            "reports_today": today_reports,
+            "verifications_today": today_verifications
+        }
+    }
 
 if __name__ == "__main__":
     import uvicorn

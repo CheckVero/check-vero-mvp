@@ -59,6 +59,7 @@ function App() {
     localStorage.removeItem('user');
     setUser(null);
     setCurrentView('home');
+    showMessage('Logged out successfully!');
   };
 
   const LoginForm = () => {
@@ -94,39 +95,61 @@ function App() {
     };
 
     return (
-      <div className="max-w-md mx-auto bg-white rounded-lg shadow-md p-6">
-        <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">Login to Check Vero</h2>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <input
-            type="text"
-            placeholder="Username"
-            value={formData.username}
-            onChange={(e) => setFormData({...formData, username: e.target.value})}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-            required
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            value={formData.password}
-            onChange={(e) => setFormData({...formData, password: e.target.value})}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-            required
-          />
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 disabled:opacity-50 font-semibold"
-          >
-            {loading ? 'Logging in...' : 'Login'}
-          </button>
-        </form>
-        <p className="text-center mt-4 text-gray-600">
-          Don't have an account? 
-          <button onClick={() => setCurrentView('register')} className="text-green-600 hover:text-green-700 ml-1">
-            Register here
-          </button>
-        </p>
+      <div className="container">
+        <div className="card" style={{ maxWidth: '400px', margin: '0 auto' }}>
+          <div className="logo-container" style={{ justifyContent: 'center', marginBottom: '32px' }}>
+            <div className="logo-icon">✓</div>
+            <div className="logo-text">Check Vero</div>
+          </div>
+          <h2 className="dashboard-title" style={{ fontSize: '24px', textAlign: 'center', marginBottom: '32px' }}>
+            Welcome Back
+          </h2>
+          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+            <div className="form-group">
+              <label className="form-label">Username</label>
+              <input
+                type="text"
+                value={formData.username}
+                onChange={(e) => setFormData({...formData, username: e.target.value})}
+                className="form-input"
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label className="form-label">Password</label>
+              <input
+                type="password"
+                value={formData.password}
+                onChange={(e) => setFormData({...formData, password: e.target.value})}
+                className="form-input"
+                required
+              />
+            </div>
+            <button
+              type="submit"
+              disabled={loading}
+              className="btn-primary"
+            >
+              {loading ? (
+                <>
+                  <span className="loading-spinner"></span>
+                  Signing in...
+                </>
+              ) : (
+                'Sign In'
+              )}
+            </button>
+          </form>
+          <p style={{ textAlign: 'center', marginTop: '24px', color: 'var(--gray-600)' }}>
+            Don't have an account? 
+            <button 
+              onClick={() => setCurrentView('register')} 
+              style={{ color: 'var(--primary-green)', marginLeft: '4px', background: 'none', border: 'none', cursor: 'pointer', fontWeight: '600' }}
+            >
+              Sign up here
+            </button>
+          </p>
+        </div>
       </div>
     );
   };
@@ -162,7 +185,7 @@ function App() {
           role: response.role
         });
         setCurrentView('dashboard');
-        showMessage('Registration successful!');
+        showMessage('Account created successfully!');
       } catch (error) {
         showMessage('Registration failed: ' + error.message, 'error');
       }
@@ -170,66 +193,95 @@ function App() {
     };
 
     return (
-      <div className="max-w-md mx-auto bg-white rounded-lg shadow-md p-6">
-        <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">Register for Check Vero</h2>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <input
-            type="text"
-            placeholder="Username"
-            value={formData.username}
-            onChange={(e) => setFormData({...formData, username: e.target.value})}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-            required
-          />
-          <input
-            type="email"
-            placeholder="Email"
-            value={formData.email}
-            onChange={(e) => setFormData({...formData, email: e.target.value})}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-            required
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            value={formData.password}
-            onChange={(e) => setFormData({...formData, password: e.target.value})}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-            required
-          />
-          <select
-            value={formData.role}
-            onChange={(e) => setFormData({...formData, role: e.target.value})}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-          >
-            <option value="citizen">Citizen</option>
-            <option value="business">Business/Government</option>
-            <option value="admin">Admin</option>
-          </select>
-          {formData.role === 'business' && (
-            <input
-              type="text"
-              placeholder="Company Name"
-              value={formData.company_name}
-              onChange={(e) => setFormData({...formData, company_name: e.target.value})}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-              required
-            />
-          )}
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 disabled:opacity-50 font-semibold"
-          >
-            {loading ? 'Registering...' : 'Register'}
-          </button>
-        </form>
-        <p className="text-center mt-4 text-gray-600">
-          Already have an account? 
-          <button onClick={() => setCurrentView('login')} className="text-green-600 hover:text-green-700 ml-1">
-            Login here
-          </button>
-        </p>
+      <div className="container">
+        <div className="card" style={{ maxWidth: '400px', margin: '0 auto' }}>
+          <div className="logo-container" style={{ justifyContent: 'center', marginBottom: '32px' }}>
+            <div className="logo-icon">✓</div>
+            <div className="logo-text">Check Vero</div>
+          </div>
+          <h2 className="dashboard-title" style={{ fontSize: '24px', textAlign: 'center', marginBottom: '32px' }}>
+            Create Your Account
+          </h2>
+          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+            <div className="form-group">
+              <label className="form-label">Username</label>
+              <input
+                type="text"
+                value={formData.username}
+                onChange={(e) => setFormData({...formData, username: e.target.value})}
+                className="form-input"
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label className="form-label">Email</label>
+              <input
+                type="email"
+                value={formData.email}
+                onChange={(e) => setFormData({...formData, email: e.target.value})}
+                className="form-input"
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label className="form-label">Password</label>
+              <input
+                type="password"
+                value={formData.password}
+                onChange={(e) => setFormData({...formData, password: e.target.value})}
+                className="form-input"
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label className="form-label">Account Type</label>
+              <select
+                value={formData.role}
+                onChange={(e) => setFormData({...formData, role: e.target.value})}
+                className="form-select"
+              >
+                <option value="citizen">Citizen</option>
+                <option value="business">Business/Government</option>
+                <option value="admin">Admin</option>
+              </select>
+            </div>
+            {formData.role === 'business' && (
+              <div className="form-group">
+                <label className="form-label">Company Name</label>
+                <input
+                  type="text"
+                  value={formData.company_name}
+                  onChange={(e) => setFormData({...formData, company_name: e.target.value})}
+                  className="form-input"
+                  required
+                />
+              </div>
+            )}
+            <button
+              type="submit"
+              disabled={loading}
+              className="btn-primary"
+            >
+              {loading ? (
+                <>
+                  <span className="loading-spinner"></span>
+                  Creating Account...
+                </>
+              ) : (
+                'Create Account'
+              )}
+            </button>
+          </form>
+          <p style={{ textAlign: 'center', marginTop: '24px', color: 'var(--gray-600)' }}>
+            Already have an account? 
+            <button 
+              onClick={() => setCurrentView('login')} 
+              style={{ color: 'var(--primary-green)', marginLeft: '4px', background: 'none', border: 'none', cursor: 'pointer', fontWeight: '600' }}
+            >
+              Sign in here
+            </button>
+          </p>
+        </div>
       </div>
     );
   };
@@ -254,50 +306,141 @@ function App() {
     };
 
     return (
-      <div className="max-w-md mx-auto bg-white rounded-lg shadow-md p-6">
-        <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">Verify Phone Number</h2>
-        <form onSubmit={handleVerify} className="space-y-4">
-          <input
-            type="tel"
-            placeholder="Enter phone number (e.g., +1234567890)"
-            value={phoneNumber}
-            onChange={(e) => setPhoneNumber(e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-            required
-          />
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 disabled:opacity-50 font-semibold"
-          >
-            {loading ? 'Verifying...' : 'Verify Number'}
-          </button>
-        </form>
-        
-        {verificationResult && (
-          <div className={`mt-6 p-4 rounded-lg ${verificationResult.is_verified ? 'bg-green-100 border-green-500' : 'bg-red-100 border-red-500'} border`}>
-            {verificationResult.is_verified ? (
-              <div className="flex items-center">
-                <span className="text-2xl mr-2">✅</span>
-                <div>
-                  <p className="font-semibold text-green-800">Verified Business</p>
-                  <p className="text-green-700">{verificationResult.company_name}</p>
-                  {verificationResult.description && (
-                    <p className="text-sm text-green-600 mt-1">{verificationResult.description}</p>
-                  )}
-                </div>
+      <div className="container">
+        <div className="card" style={{ maxWidth: '500px', margin: '0 auto' }}>
+          <h2 className="section-title" style={{ textAlign: 'center', marginBottom: '32px' }}>
+            Verify Phone Number
+          </h2>
+          <p style={{ textAlign: 'center', color: 'var(--gray-600)', marginBottom: '32px' }}>
+            Check if a phone number is verified by a legitimate business or government agency
+          </p>
+          <form onSubmit={handleVerify} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+            <div className="form-group">
+              <label className="form-label">Phone Number</label>
+              <input
+                type="tel"
+                placeholder="Enter phone number (e.g., +1234567890)"
+                value={phoneNumber}
+                onChange={(e) => setPhoneNumber(e.target.value)}
+                className="form-input"
+                required
+              />
+            </div>
+            <button
+              type="submit"
+              disabled={loading}
+              className="btn-primary"
+            >
+              {loading ? (
+                <>
+                  <span className="loading-spinner"></span>
+                  Verifying...
+                </>
+              ) : (
+                'Verify Number'
+              )}
+            </button>
+          </form>
+          
+          {verificationResult && (
+            <div className={verificationResult.is_verified ? 'verification-success' : 'verification-fail'}>
+              <div className="verification-icon">
+                {verificationResult.is_verified ? '✅' : '❌'}
               </div>
-            ) : (
-              <div className="flex items-center">
-                <span className="text-2xl mr-2">❌</span>
-                <div>
-                  <p className="font-semibold text-red-800">Not Verified</p>
-                  <p className="text-red-700">This number is not registered with Check Vero</p>
-                </div>
+              <div>
+                {verificationResult.is_verified ? (
+                  <div>
+                    <p style={{ fontWeight: '600', margin: '0 0 4px 0' }}>Verified by Check Vero</p>
+                    <p style={{ margin: '0 0 4px 0' }}>{verificationResult.company_name}</p>
+                    {verificationResult.description && (
+                      <p style={{ margin: '0', fontSize: '14px', opacity: '0.8' }}>
+                        {verificationResult.description}
+                      </p>
+                    )}
+                  </div>
+                ) : (
+                  <div>
+                    <p style={{ fontWeight: '600', margin: '0 0 4px 0' }}>Not Verified</p>
+                    <p style={{ margin: '0', fontSize: '14px' }}>
+                      This number is not registered with Check Vero. Use caution.
+                    </p>
+                  </div>
+                )}
               </div>
-            )}
-          </div>
-        )}
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  };
+
+  const FileUpload = ({ onFileSelect, accept = "image/*,audio/*", maxSize = 5 * 1024 * 1024 }) => {
+    const [dragOver, setDragOver] = useState(false);
+    const [selectedFile, setSelectedFile] = useState(null);
+
+    const handleDragOver = (e) => {
+      e.preventDefault();
+      setDragOver(true);
+    };
+
+    const handleDragLeave = (e) => {
+      e.preventDefault();
+      setDragOver(false);
+    };
+
+    const handleDrop = (e) => {
+      e.preventDefault();
+      setDragOver(false);
+      const files = e.dataTransfer.files;
+      if (files.length > 0) {
+        handleFileSelect(files[0]);
+      }
+    };
+
+    const handleFileSelect = (file) => {
+      if (file.size > maxSize) {
+        showMessage('File size too large. Maximum size is 5MB.', 'error');
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const base64Data = e.target.result;
+        setSelectedFile(file);
+        onFileSelect(base64Data);
+      };
+      reader.readAsDataURL(file);
+    };
+
+    const handleFileInputChange = (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        handleFileSelect(file);
+      }
+    };
+
+    return (
+      <div
+        className={`file-upload-area ${dragOver ? 'dragover' : ''}`}
+        onDragOver={handleDragOver}
+        onDragLeave={handleDragLeave}
+        onDrop={handleDrop}
+        onClick={() => document.getElementById('file-input').click()}
+      >
+        <input
+          id="file-input"
+          type="file"
+          accept={accept}
+          onChange={handleFileInputChange}
+          style={{ display: 'none' }}
+        />
+        <div className="file-upload-icon">📎</div>
+        <div className="file-upload-text">
+          {selectedFile ? selectedFile.name : 'Click or drag to upload screenshot or audio'}
+        </div>
+        <div className="file-upload-hint">
+          Supports images and audio files (max 5MB)
+        </div>
       </div>
     );
   };
@@ -336,83 +479,131 @@ function App() {
     };
 
     return (
-      <div className="max-w-2xl mx-auto bg-white rounded-lg shadow-md p-6">
-        <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">Report Suspicious Communication</h2>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <select
-            value={formData.report_type}
-            onChange={(e) => setFormData({...formData, report_type: e.target.value})}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-          >
-            <option value="call">Suspicious Call</option>
-            <option value="email">Suspicious Email</option>
-            <option value="ai_chat">Suspicious AI Chat</option>
-          </select>
+      <div className="container">
+        <div className="card" style={{ maxWidth: '600px', margin: '0 auto' }}>
+          <h2 className="section-title" style={{ textAlign: 'center', marginBottom: '16px' }}>
+            Report Suspicious Communication
+          </h2>
+          <p style={{ textAlign: 'center', color: 'var(--gray-600)', marginBottom: '32px' }}>
+            Help protect others by reporting suspicious calls, emails, or AI messages
+          </p>
           
-          {formData.report_type === 'call' && (
-            <input
-              type="tel"
-              placeholder="Phone number (optional)"
-              value={formData.phone_number}
-              onChange={(e) => setFormData({...formData, phone_number: e.target.value})}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-            />
-          )}
-          
-          {formData.report_type === 'email' && (
-            <input
-              type="email"
-              placeholder="Email address (optional)"
-              value={formData.email_address}
-              onChange={(e) => setFormData({...formData, email_address: e.target.value})}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-            />
-          )}
-          
-          <textarea
-            placeholder="Describe the suspicious communication in detail..."
-            value={formData.description}
-            onChange={(e) => setFormData({...formData, description: e.target.value})}
-            rows="4"
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-            required
-          />
-          
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 disabled:opacity-50 font-semibold"
-          >
-            {loading ? 'Submitting Report...' : 'Submit Report'}
-          </button>
-        </form>
-        
-        {analysisResult && (
-          <div className="mt-6 p-4 bg-gray-50 rounded-lg">
-            <h3 className="font-semibold text-gray-800 mb-2">AI Analysis Result</h3>
-            <div className={`p-3 rounded mb-3 ${
-              analysisResult.risk_level === 'HIGH' ? 'bg-red-100 text-red-800' :
-              analysisResult.risk_level === 'MEDIUM' ? 'bg-yellow-100 text-yellow-800' :
-              'bg-green-100 text-green-800'
-            }`}>
-              <p className="font-medium">Risk Level: {analysisResult.risk_level}</p>
-              <p className="mt-1">{analysisResult.recommendation}</p>
+          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+            <div className="form-group">
+              <label className="form-label">Type of Communication</label>
+              <select
+                value={formData.report_type}
+                onChange={(e) => setFormData({...formData, report_type: e.target.value})}
+                className="form-select"
+              >
+                <option value="call">Suspicious Call</option>
+                <option value="email">Suspicious Email</option>
+                <option value="ai_chat">Suspicious AI Chat</option>
+              </select>
             </div>
-            <p className="text-sm text-gray-600">
-              Confidence: {analysisResult.confidence_score}% | Points Earned: {analysisResult.points_awarded}
-            </p>
-            {analysisResult.reasons.length > 0 && (
-              <div className="mt-2">
-                <p className="text-sm font-medium text-gray-700">Analysis Reasons:</p>
-                <ul className="text-sm text-gray-600 list-disc list-inside">
-                  {analysisResult.reasons.map((reason, index) => (
-                    <li key={index}>{reason}</li>
-                  ))}
-                </ul>
+            
+            {formData.report_type === 'call' && (
+              <div className="form-group">
+                <label className="form-label">Phone Number (optional)</label>
+                <input
+                  type="tel"
+                  placeholder="Phone number"
+                  value={formData.phone_number}
+                  onChange={(e) => setFormData({...formData, phone_number: e.target.value})}
+                  className="form-input"
+                />
               </div>
             )}
-          </div>
-        )}
+            
+            {formData.report_type === 'email' && (
+              <div className="form-group">
+                <label className="form-label">Email Address (optional)</label>
+                <input
+                  type="email"
+                  placeholder="Email address"
+                  value={formData.email_address}
+                  onChange={(e) => setFormData({...formData, email_address: e.target.value})}
+                  className="form-input"
+                />
+              </div>
+            )}
+            
+            <div className="form-group">
+              <label className="form-label">Description</label>
+              <textarea
+                placeholder="Describe the suspicious communication in detail..."
+                value={formData.description}
+                onChange={(e) => setFormData({...formData, description: e.target.value})}
+                className="form-input"
+                rows="4"
+                required
+              />
+            </div>
+            
+            <div className="form-group">
+              <label className="form-label">Upload Evidence (optional)</label>
+              <FileUpload
+                onFileSelect={(base64Data) => setFormData({...formData, screenshot: base64Data})}
+                accept="image/*,audio/*"
+              />
+            </div>
+            
+            <button
+              type="submit"
+              disabled={loading}
+              className="btn-primary"
+            >
+              {loading ? (
+                <>
+                  <span className="loading-spinner"></span>
+                  Analyzing Report...
+                </>
+              ) : (
+                'Submit Report'
+              )}
+            </button>
+          </form>
+          
+          {analysisResult && (
+            <div className="card-compact" style={{ marginTop: '24px', background: 'var(--gray-50)' }}>
+              <h3 style={{ color: 'var(--gray-800)', marginBottom: '16px', fontSize: '18px' }}>
+                🤖 AI Analysis Result
+              </h3>
+              <div className={`risk-${analysisResult.risk_level.toLowerCase()}`} style={{ marginBottom: '16px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+                  <span style={{ fontSize: '18px' }}>
+                    {analysisResult.risk_level === 'HIGH' ? '🚨' : 
+                     analysisResult.risk_level === 'MEDIUM' ? '⚠️' : '✅'}
+                  </span>
+                  <span style={{ fontWeight: '600' }}>Risk Level: {analysisResult.risk_level}</span>
+                </div>
+                <p style={{ margin: '0', fontSize: '16px' }}>{analysisResult.recommendation}</p>
+              </div>
+              
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+                <span style={{ fontSize: '14px', color: 'var(--gray-600)' }}>
+                  Confidence: {analysisResult.confidence_score}%
+                </span>
+                <div className="status-badge status-verified">
+                  +{analysisResult.points_awarded} Points Earned
+                </div>
+              </div>
+              
+              {analysisResult.reasons && analysisResult.reasons.length > 0 && (
+                <div>
+                  <p style={{ fontSize: '14px', fontWeight: '600', color: 'var(--gray-700)', marginBottom: '8px' }}>
+                    Analysis Reasons:
+                  </p>
+                  <ul style={{ fontSize: '14px', color: 'var(--gray-600)', paddingLeft: '20px', margin: '0' }}>
+                    {analysisResult.reasons.map((reason, index) => (
+                      <li key={index}>{reason}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
       </div>
     );
   };
@@ -446,109 +637,119 @@ function App() {
       fetchDashboardData();
     }, [user.role]);
 
-    const StatCard = ({ title, value, icon }) => (
-      <div className="bg-white rounded-lg shadow-md p-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <p className="text-sm font-medium text-gray-600">{title}</p>
-            <p className="text-2xl font-semibold text-gray-900">{value}</p>
-          </div>
-          <div className="text-3xl text-green-600">{icon}</div>
-        </div>
+    const StatCard = ({ title, value, icon, color = 'var(--primary-green)' }) => (
+      <div className="stat-card">
+        <div className="stat-icon">{icon}</div>
+        <div className="stat-value" style={{ color }}>{value}</div>
+        <div className="stat-label">{title}</div>
       </div>
     );
 
     return (
-      <div className="max-w-6xl mx-auto">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">
+      <div className="container">
+        <div className="dashboard-header">
+          <h1 className="dashboard-title">
             Welcome back, {user.username}!
           </h1>
-          <p className="text-gray-600">
+          <p className="dashboard-subtitle">
             {user.role === 'citizen' ? 'Your fraud protection dashboard' :
              user.role === 'business' ? 'Your business verification dashboard' :
              'Admin control dashboard'}
           </p>
         </div>
 
-        {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div className="stat-grid">
           {user.role === 'citizen' && (
             <>
-              <StatCard title="Total Reports" value={stats.total_reports || 0} icon="📊" />
+              <StatCard title="Reports Submitted" value={stats.total_reports || 0} icon="📊" />
               <StatCard title="Points Earned" value={stats.points_earned || 0} icon="🏆" />
-              <StatCard title="High Risk Detected" value={stats.high_risk_reports || 0} icon="⚠️" />
+              <StatCard title="High Risk Detected" value={stats.high_risk_reports || 0} icon="🚨" />
             </>
           )}
           {user.role === 'business' && (
             <>
               <StatCard title="Registered Numbers" value={stats.registered_numbers || 0} icon="📞" />
-              <StatCard title="Verification Checks" value={stats.verification_checks || 0} icon="✅" />
-              <StatCard title="Reports Mentioning" value={stats.reports_mentioning || 0} icon="📋" />
+              <StatCard title="Verification Requests" value={stats.verification_checks || 0} icon="✅" />
+              <StatCard title="Related Reports" value={stats.reports_mentioning || 0} icon="📋" />
             </>
           )}
           {user.role === 'admin' && (
             <>
               <StatCard title="Total Users" value={stats.total_users || 0} icon="👥" />
               <StatCard title="Total Reports" value={stats.total_reports || 0} icon="📊" />
-              <StatCard title="Registered Numbers" value={stats.total_phone_numbers || 0} icon="📞" />
+              <StatCard title="Verified Numbers" value={stats.total_phone_numbers || 0} icon="📞" />
             </>
           )}
         </div>
 
-        {/* Recent Activity */}
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <h2 className="text-xl font-semibold text-gray-800 mb-4">
+        <div className="card">
+          <h2 className="section-title" style={{ marginBottom: '24px' }}>
             {user.role === 'citizen' ? 'Your Recent Reports' :
              user.role === 'business' ? 'Your Registered Numbers' :
              'Recent System Activity'}
           </h2>
           
           {user.role === 'citizen' && (
-            <div className="space-y-4">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
               {reports.slice(0, 5).map((report) => (
-                <div key={report.report_id} className="border-l-4 border-green-500 pl-4 py-2">
-                  <div className="flex justify-between items-start">
+                <div key={report.report_id} style={{ padding: '16px', background: 'var(--gray-50)', borderRadius: '8px', borderLeft: '4px solid var(--primary-green)' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                     <div>
-                      <p className="font-medium text-gray-800">
+                      <p style={{ fontWeight: '600', color: 'var(--gray-800)', margin: '0 0 4px 0' }}>
                         {report.report_type.charAt(0).toUpperCase() + report.report_type.slice(1)} Report
                       </p>
-                      <p className="text-sm text-gray-600">{report.description.substring(0, 100)}...</p>
-                      <p className="text-xs text-gray-500 mt-1">
+                      <p style={{ color: 'var(--gray-600)', margin: '0 0 8px 0', fontSize: '14px' }}>
+                        {report.description.substring(0, 100)}...
+                      </p>
+                      <p style={{ color: 'var(--gray-500)', margin: '0', fontSize: '12px' }}>
                         {new Date(report.created_at).toLocaleDateString()}
                       </p>
                     </div>
-                    <div className={`px-2 py-1 rounded text-xs font-medium ${
-                      report.ai_analysis?.risk_level === 'HIGH' ? 'bg-red-100 text-red-800' :
-                      report.ai_analysis?.risk_level === 'MEDIUM' ? 'bg-yellow-100 text-yellow-800' :
-                      'bg-green-100 text-green-800'
+                    <div className={`status-badge ${
+                      report.ai_analysis?.risk_level === 'HIGH' ? 'status-rejected' :
+                      report.ai_analysis?.risk_level === 'MEDIUM' ? 'status-pending' :
+                      'status-verified'
                     }`}>
                       {report.ai_analysis?.risk_level || 'PENDING'}
                     </div>
                   </div>
                 </div>
               ))}
+              {reports.length === 0 && (
+                <p style={{ textAlign: 'center', color: 'var(--gray-600)', padding: '40px' }}>
+                  No reports submitted yet. Start by reporting suspicious communications!
+                </p>
+              )}
             </div>
           )}
           
           {user.role === 'business' && (
-            <div className="space-y-4">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
               {phoneNumbers.slice(0, 5).map((phone) => (
-                <div key={phone.phone_id} className="border-l-4 border-green-500 pl-4 py-2">
-                  <div className="flex justify-between items-start">
+                <div key={phone.phone_id} style={{ padding: '16px', background: 'var(--gray-50)', borderRadius: '8px', borderLeft: '4px solid var(--primary-green)' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                     <div>
-                      <p className="font-medium text-gray-800">{phone.phone_number}</p>
-                      <p className="text-sm text-gray-600">{phone.company_name}</p>
-                      <p className="text-xs text-gray-500 mt-1">
+                      <p style={{ fontWeight: '600', color: 'var(--gray-800)', margin: '0 0 4px 0' }}>
+                        {phone.phone_number}
+                      </p>
+                      <p style={{ color: 'var(--gray-600)', margin: '0 0 8px 0', fontSize: '14px' }}>
+                        {phone.company_name}
+                      </p>
+                      <p style={{ color: 'var(--gray-500)', margin: '0', fontSize: '12px' }}>
                         Registered: {new Date(phone.created_at).toLocaleDateString()}
                       </p>
                     </div>
-                    <div className="px-2 py-1 rounded text-xs font-medium bg-green-100 text-green-800">
+                    <div className="status-badge status-verified">
                       VERIFIED
                     </div>
                   </div>
                 </div>
               ))}
+              {phoneNumbers.length === 0 && (
+                <p style={{ textAlign: 'center', color: 'var(--gray-600)', padding: '40px' }}>
+                  No phone numbers registered yet. Start by registering your business numbers!
+                </p>
+              )}
             </div>
           )}
         </div>
@@ -580,125 +781,168 @@ function App() {
     };
 
     return (
-      <div className="max-w-md mx-auto bg-white rounded-lg shadow-md p-6">
-        <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">Register Phone Number</h2>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <input
-            type="tel"
-            placeholder="Phone number (e.g., +1234567890)"
-            value={formData.phone_number}
-            onChange={(e) => setFormData({...formData, phone_number: e.target.value})}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-            required
-          />
-          <input
-            type="text"
-            placeholder="Company name"
-            value={formData.company_name}
-            onChange={(e) => setFormData({...formData, company_name: e.target.value})}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-            required
-          />
-          <textarea
-            placeholder="Description (optional)"
-            value={formData.description}
-            onChange={(e) => setFormData({...formData, description: e.target.value})}
-            rows="3"
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-          />
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 disabled:opacity-50 font-semibold"
-          >
-            {loading ? 'Registering...' : 'Register Number'}
-          </button>
-        </form>
+      <div className="container">
+        <div className="card" style={{ maxWidth: '500px', margin: '0 auto' }}>
+          <h2 className="section-title" style={{ textAlign: 'center', marginBottom: '16px' }}>
+            Register Phone Number
+          </h2>
+          <p style={{ textAlign: 'center', color: 'var(--gray-600)', marginBottom: '32px' }}>
+            Register your business phone number to receive the verified checkmark
+          </p>
+          
+          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+            <div className="form-group">
+              <label className="form-label">Phone Number</label>
+              <input
+                type="tel"
+                placeholder="Enter phone number (e.g., +1234567890)"
+                value={formData.phone_number}
+                onChange={(e) => setFormData({...formData, phone_number: e.target.value})}
+                className="form-input"
+                required
+              />
+            </div>
+            
+            <div className="form-group">
+              <label className="form-label">Company Name</label>
+              <input
+                type="text"
+                placeholder="Your company name"
+                value={formData.company_name}
+                onChange={(e) => setFormData({...formData, company_name: e.target.value})}
+                className="form-input"
+                required
+              />
+            </div>
+            
+            <div className="form-group">
+              <label className="form-label">Description (optional)</label>
+              <textarea
+                placeholder="Brief description of this phone line (e.g., Customer Service, Sales)"
+                value={formData.description}
+                onChange={(e) => setFormData({...formData, description: e.target.value})}
+                className="form-input"
+                rows="3"
+              />
+            </div>
+            
+            <button
+              type="submit"
+              disabled={loading}
+              className="btn-primary"
+            >
+              {loading ? (
+                <>
+                  <span className="loading-spinner"></span>
+                  Registering...
+                </>
+              ) : (
+                'Register Phone Number'
+              )}
+            </button>
+          </form>
+        </div>
       </div>
     );
   };
 
   const HomePage = () => (
-    <div className="max-w-6xl mx-auto">
-      {/* Hero Section */}
-      <div className="text-center mb-16">
-        <h1 className="text-5xl font-bold text-gray-800 mb-6">
-          Protect Yourself from Digital Fraud
-        </h1>
-        <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
-          Check Vero helps you identify legitimate calls from businesses and government agencies 
-          while protecting you from scams, phishing attempts, and fraudulent communications.
-        </p>
-        <div className="flex justify-center space-x-4">
-          <button
-            onClick={() => setCurrentView('verify')}
-            className="bg-green-600 text-white px-8 py-3 rounded-lg hover:bg-green-700 font-semibold text-lg"
-          >
-            Verify a Number
-          </button>
-          <button
-            onClick={() => setCurrentView('register')}
-            className="border border-green-600 text-green-600 px-8 py-3 rounded-lg hover:bg-green-50 font-semibold text-lg"
-          >
-            Get Started
-          </button>
+    <div>
+      <div className="hero-section">
+        <div className="hero-content">
+          <div className="logo-container" style={{ justifyContent: 'center', marginBottom: '40px' }}>
+            <div className="logo-icon" style={{ fontSize: '32px', width: '64px', height: '64px' }}>✓</div>
+            <div className="logo-text" style={{ fontSize: '32px' }}>Check Vero</div>
+          </div>
+          <h1 className="hero-title">
+            Verify what reaches you — voice, email & AI
+          </h1>
+          <p className="hero-subtitle">
+            Check Vero helps you instantly verify legitimate communications from businesses and 
+            government agencies, while protecting you from scams, phishing, and fraudulent AI interactions.
+          </p>
+          <div className="hero-buttons">
+            <button
+              onClick={() => setCurrentView('verify')}
+              className="btn-primary"
+            >
+              Verify a Number
+            </button>
+            <button
+              onClick={() => setCurrentView('register')}
+              className="btn-secondary"
+            >
+              Get Started
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* Features Section */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-        <div className="text-center p-6 bg-white rounded-lg shadow-md">
-          <div className="text-4xl mb-4">✅</div>
-          <h3 className="text-xl font-semibold text-gray-800 mb-2">Instant Verification</h3>
-          <p className="text-gray-600">
-            Get real-time verification when receiving calls from registered businesses and government agencies.
-          </p>
+      <div className="container">
+        <div className="feature-grid">
+          <div className="feature-card">
+            <div className="feature-icon">✅</div>
+            <h3 className="feature-title">Instant Verification</h3>
+            <p className="feature-description">
+              Get real-time verification with green checkmarks when receiving communications from 
+              registered businesses and government agencies.
+            </p>
+          </div>
+          <div className="feature-card">
+            <div className="feature-icon">🤖</div>
+            <h3 className="feature-title">AI-Powered Analysis</h3>
+            <p className="feature-description">
+              Our advanced AI instantly analyzes suspicious communications and provides detailed 
+              feedback on potential fraud patterns and risks.
+            </p>
+          </div>
+          <div className="feature-card">
+            <div className="feature-icon">🏆</div>
+            <h3 className="feature-title">Earn Rewards</h3>
+            <p className="feature-description">
+              Help protect the community by reporting fraud and earn points for valuable 
+              contributions to our security database.
+            </p>
+          </div>
         </div>
-        <div className="text-center p-6 bg-white rounded-lg shadow-md">
-          <div className="text-4xl mb-4">🤖</div>
-          <h3 className="text-xl font-semibold text-gray-800 mb-2">AI-Powered Analysis</h3>
-          <p className="text-gray-600">
-            Our advanced AI analyzes suspicious communications and provides instant feedback on potential threats.
-          </p>
-        </div>
-        <div className="text-center p-6 bg-white rounded-lg shadow-md">
-          <div className="text-4xl mb-4">🏆</div>
-          <h3 className="text-xl font-semibold text-gray-800 mb-2">Earn Rewards</h3>
-          <p className="text-gray-600">
-            Help protect the community by reporting fraud and earn points for valuable contributions.
-          </p>
-        </div>
-      </div>
 
-      {/* How It Works */}
-      <div className="bg-white rounded-lg shadow-md p-8 mb-16">
-        <h2 className="text-3xl font-bold text-gray-800 mb-8 text-center">How Check Vero Works</h2>
-        <div className="space-y-6">
-          <div className="flex items-start space-x-4">
-            <div className="bg-green-100 rounded-full p-2 flex-shrink-0">
-              <span className="text-green-600 font-bold text-lg">1</span>
+        <div className="card">
+          <h2 className="section-title" style={{ textAlign: 'center', marginBottom: '32px' }}>
+            How Check Vero Works
+          </h2>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
+            <div style={{ display: 'flex', gap: '20px', alignItems: 'flex-start' }}>
+              <div style={{ background: 'var(--green-100)', borderRadius: '50%', width: '48px', height: '48px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--primary-green)', fontWeight: '700', fontSize: '20px', flexShrink: 0 }}>
+                1
+              </div>
+              <div>
+                <h3 style={{ color: 'var(--gray-800)', marginBottom: '8px' }}>Businesses Register</h3>
+                <p style={{ color: 'var(--gray-600)', margin: '0' }}>
+                  Legitimate businesses and government agencies register their phone numbers, email domains, and AI systems.
+                </p>
+              </div>
             </div>
-            <div>
-              <h3 className="font-semibold text-gray-800">Businesses Register Their Numbers</h3>
-              <p className="text-gray-600">Legitimate businesses and government agencies register their phone numbers with our platform.</p>
+            <div style={{ display: 'flex', gap: '20px', alignItems: 'flex-start' }}>
+              <div style={{ background: 'var(--green-100)', borderRadius: '50%', width: '48px', height: '48px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--primary-green)', fontWeight: '700', fontSize: '20px', flexShrink: 0 }}>
+                2
+              </div>
+              <div>
+                <h3 style={{ color: 'var(--gray-800)', marginBottom: '8px' }}>Real-Time Verification</h3>
+                <p style={{ color: 'var(--gray-600)', margin: '0' }}>
+                  When you receive a call, email, or chat, instantly check if it's verified with our green checkmark system.
+                </p>
+              </div>
             </div>
-          </div>
-          <div className="flex items-start space-x-4">
-            <div className="bg-green-100 rounded-full p-2 flex-shrink-0">
-              <span className="text-green-600 font-bold text-lg">2</span>
-            </div>
-            <div>
-              <h3 className="font-semibold text-gray-800">Real-Time Verification</h3>
-              <p className="text-gray-600">When you receive a call, check the number instantly to see if it's verified.</p>
-            </div>
-          </div>
-          <div className="flex items-start space-x-4">
-            <div className="bg-green-100 rounded-full p-2 flex-shrink-0">
-              <span className="text-green-600 font-bold text-lg">3</span>
-            </div>
-            <div>
-              <h3 className="font-semibold text-gray-800">Report Suspicious Activity</h3>
-              <p className="text-gray-600">Report suspicious calls, emails, or AI chats to help protect others in the community.</p>
+            <div style={{ display: 'flex', gap: '20px', alignItems: 'flex-start' }}>
+              <div style={{ background: 'var(--green-100)', borderRadius: '50%', width: '48px', height: '48px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--primary-green)', fontWeight: '700', fontSize: '20px', flexShrink: 0 }}>
+                3
+              </div>
+              <div>
+                <h3 style={{ color: 'var(--gray-800)', marginBottom: '8px' }}>Report & Protect</h3>
+                <p style={{ color: 'var(--gray-600)', margin: '0' }}>
+                  Report suspicious communications to help protect others. Our AI analyzes patterns to identify new fraud attempts.
+                </p>
+              </div>
             </div>
           </div>
         </div>
@@ -707,78 +951,84 @@ function App() {
   );
 
   const Navigation = () => (
-    <nav className="bg-white shadow-md mb-8">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
-          <div className="flex items-center space-x-8">
+    <div className="header">
+      <div className="container">
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', height: '80px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '40px' }}>
             <button
               onClick={() => setCurrentView('home')}
-              className="text-2xl font-bold text-green-600"
+              className="logo-container"
+              style={{ background: 'none', border: 'none', cursor: 'pointer' }}
             >
-              Check Vero
+              <div className="logo-icon">✓</div>
+              <div className="logo-text">Check Vero</div>
             </button>
-            <div className="hidden md:flex space-x-6">
+            <div style={{ display: 'flex', gap: '8px' }}>
               <button
                 onClick={() => setCurrentView('verify')}
-                className="text-gray-600 hover:text-green-600 font-medium"
+                className="nav-link"
               >
-                Verify Number
+                Verify
               </button>
               {user && user.role === 'citizen' && (
                 <button
                   onClick={() => setCurrentView('report')}
-                  className="text-gray-600 hover:text-green-600 font-medium"
+                  className="nav-link"
                 >
-                  Report Fraud
+                  Report
                 </button>
               )}
               {user && user.role === 'business' && (
                 <button
                   onClick={() => setCurrentView('register-phone')}
-                  className="text-gray-600 hover:text-green-600 font-medium"
+                  className="nav-link"
                 >
-                  Register Number
+                  Register
                 </button>
               )}
             </div>
           </div>
-          <div className="flex items-center space-x-4">
+          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
             {user ? (
               <>
                 <button
                   onClick={() => setCurrentView('dashboard')}
-                  className="text-gray-600 hover:text-green-600 font-medium"
+                  className="nav-link"
                 >
                   Dashboard
                 </button>
-                <span className="text-gray-600">Welcome, {user.username}</span>
+                <span style={{ color: 'var(--gray-600)', fontSize: '14px' }}>
+                  {user.username}
+                </span>
                 <button
                   onClick={logout}
-                  className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 font-medium"
+                  className="btn-secondary"
+                  style={{ padding: '8px 16px', fontSize: '14px' }}
                 >
-                  Logout
+                  Sign Out
                 </button>
               </>
             ) : (
               <>
                 <button
                   onClick={() => setCurrentView('login')}
-                  className="text-gray-600 hover:text-green-600 font-medium"
+                  className="nav-link"
                 >
-                  Login
+                  Sign In
                 </button>
                 <button
                   onClick={() => setCurrentView('register')}
-                  className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 font-medium"
+                  className="btn-primary"
+                  style={{ padding: '8px 16px', fontSize: '14px' }}
                 >
-                  Register
+                  Sign Up
                 </button>
               </>
             )}
           </div>
         </div>
       </div>
-    </nav>
+    </div>
   );
 
   const renderCurrentView = () => {
@@ -803,18 +1053,21 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="App">
       <Navigation />
       
       {message && (
-        <div className={`max-w-6xl mx-auto mb-4 p-4 rounded-lg ${
-          message.type === 'error' ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'
-        }`}>
-          {message.text}
+        <div className="container" style={{ marginTop: '20px' }}>
+          <div className={`${message.type === 'error' ? 'message-error' : 'message-success'}`}>
+            <div className="message-icon">
+              {message.type === 'error' ? '❌' : '✅'}
+            </div>
+            <div>{message.text}</div>
+          </div>
         </div>
       )}
       
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-8">
+      <div style={{ minHeight: 'calc(100vh - 80px)' }}>
         {renderCurrentView()}
       </div>
     </div>
