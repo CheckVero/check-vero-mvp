@@ -18,6 +18,7 @@ function App() {
   }, []);
 
   const apiCall = async (endpoint, options = {}) => {
+    console.log('Making API call to:', `${API_URL}${endpoint}`);
     const token = localStorage.getItem('token');
     const headers = {
       'Content-Type': 'application/json',
@@ -25,16 +26,27 @@ function App() {
       ...options.headers
     };
 
-    const response = await fetch(`${API_URL}${endpoint}`, {
-      ...options,
-      headers
-    });
+    try {
+      const response = await fetch(`${API_URL}${endpoint}`, {
+        ...options,
+        headers
+      });
 
-    if (!response.ok) {
-      throw new Error(`API Error: ${response.statusText}`);
+      console.log('Response status:', response.status);
+      
+      if (!response.ok) {
+        const errorData = await response.text();
+        console.error('API Error:', errorData);
+        throw new Error(`API Error: ${response.status} - ${errorData}`);
+      }
+
+      const data = await response.json();
+      console.log('Response data:', data);
+      return data;
+    } catch (error) {
+      console.error('API call failed:', error);
+      throw error;
     }
-
-    return response.json();
   };
 
   const showMessage = (msg, type = 'success') => {
