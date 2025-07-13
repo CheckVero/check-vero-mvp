@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 
-const API_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001';
+const API_URL = process.env.REACT_APP_BACKEND_URL || import.meta.env.REACT_APP_BACKEND_URL || 'https://b175beef-7ded-4a3d-8fd1-e5ba7a9ba148.preview.emergentagent.com';
 
 function App() {
   const [user, setUser] = useState(null);
