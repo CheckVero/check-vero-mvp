@@ -468,27 +468,51 @@ async def register_phone_number(phone_data: PhoneNumberRegister, current_user: d
 
 @app.post("/api/verify-phone")
 async def verify_phone_number(verification: VerificationCheck):
-    phone_record = db.phone_numbers.find_one({"phone_number": verification.phone_number, "is_active": True})
+    """Verify if a phone number is registered and log the attempt"""
+    
+    # Clean and normalize the phone number
+    phone_number = verification.phone_number.strip()
+    
+    # Look up the phone number in the database
+    phone_record = db.phone_numbers.find_one({
+        "phone_number": phone_number, 
+        "is_active": True
+    })
     
     if phone_record:
         # Increment verification count
         db.phone_numbers.update_one(
             {"phone_id": phone_record["phone_id"]},
-            {"$inc": {"verification_count": 1}, "$set": {"last_verified": datetime.utcnow()}}
+            {
+                "$inc": {"verification_count": 1}, 
+                "$set": {"last_verified": datetime.utcnow()}
+            }
         )
         
-        return {
+        result = {
             "is_verified": True,
             "company_name": phone_record["company_name"],
             "description": phone_record.get("description", ""),
             "verified_since": phone_record["verification_date"],
-            "verification_count": phone_record.get("verification_count", 0) + 1
+            "verification_count": phone_record.get("verification_count", 0) + 1,
+            "message": f"✅ This number is verified and belongs to {phone_record['company_name']}"
         }
+        
+        # Log the successful verification
+        log_verification_attempt(phone_number, "verified")
+        
+        return result
     else:
-        return {
+        result = {
             "is_verified": False,
-            "message": "Phone number not found in Check Vero verification database"
+            "message": "❌ This number is not registered. Proceed with caution.",
+            "warning": "Unregistered numbers may be legitimate businesses not yet in our database, or potential scammers."
         }
+        
+        # Log the failed verification
+        log_verification_attempt(phone_number, "not_verified")
+        
+        return result
 
 @app.post("/api/reports/submit")
 async def submit_report(report: ReportCreate, current_user: dict = Depends(get_current_user)):
