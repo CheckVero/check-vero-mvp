@@ -724,6 +724,38 @@ async def get_analytics_summary(current_user: dict = Depends(get_current_user)):
         }
     }
 
+@app.get("/api/verification-logs")
+async def get_verification_logs(current_user: dict = Depends(get_current_user), limit: int = 50):
+    """Get recent phone number verification attempts (admin only)"""
+    if current_user["role"] != "admin":
+        raise HTTPException(status_code=403, detail="Admin access required")
+    
+    logs = list(db.verification_logs.find().sort("timestamp", -1).limit(limit))
+    
+    # Convert ObjectId to string and format dates
+    for log in logs:
+        log["_id"] = str(log["_id"])
+        log["timestamp"] = log["timestamp"].isoformat()
+    
+    return {
+        "verification_logs": logs,
+        "total_count": db.verification_logs.count_documents({})
+    }
+
+@app.get("/api/sample-numbers")
+async def get_sample_numbers():
+    """Get list of sample verified numbers for testing (public endpoint)"""
+    sample_numbers = [
+        {"number": "+31612345678", "company": "Acme Bank"},
+        {"number": "+61298765432", "company": "Gov Australia"}, 
+        {"number": "+14155552020", "company": "TechCorp Support"},
+        {"number": "+442071234567", "company": "British Telecom"}
+    ]
+    return {
+        "sample_numbers": sample_numbers,
+        "message": "Use these numbers to test the verification system"
+    }
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8001)
