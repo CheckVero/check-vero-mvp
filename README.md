@@ -67,6 +67,20 @@ This submission represents a mission-driven prototype — combining:
 – Figma (UX/UI)  
 – GitHub Pages / Webhash (frontend)
 
+⚙️ Dev Setup Notes
+This MVP was manually structured using the DFINITY SDK (dfx) via terminal setup — no GUI templates or prebuilt generators were used.
+Each canister was initialized and configured with:
+
+dfx.json defined by hand
+
+Custom backend actor (main.mo)
+
+Frontend placeholder manually created (index.html)
+
+Local testing done via dfx start, dfx deploy, and dfx canister call
+
+This approach ensures full ownership of the build process and lays the foundation for deeper canister logic in Q3.
+
 ---
 
 ## 🌐 Links
