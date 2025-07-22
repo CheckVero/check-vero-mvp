@@ -292,28 +292,51 @@ function App() {
 
     const handleVerify = async (e) => {
       e.preventDefault();
+      if (!phoneNumber.trim()) {
+        showMessage('Please enter a phone number', 'error');
+        return;
+      }
+
       setLoading(true);
+      setVerificationResult(null); // Clear previous result
+      
       try {
+        console.log('Verifying phone number:', phoneNumber);
         const response = await apiCall('/api/verify-phone', {
           method: 'POST',
-          body: JSON.stringify({ phone_number: phoneNumber })
+          body: JSON.stringify({ phone_number: phoneNumber.trim() })
         });
+        console.log('Verification response:', response);
         setVerificationResult(response);
       } catch (error) {
+        console.error('Verification error:', error);
         showMessage('Verification failed: ' + error.message, 'error');
+        setVerificationResult({
+          is_verified: false,
+          message: '❌ Unable to verify number. Please try again.',
+          error: true
+        });
       }
       setLoading(false);
     };
 
+    const sampleNumbers = [
+      { number: '+31612345678', company: 'Acme Bank' },
+      { number: '+61298765432', company: 'Gov Australia' },
+      { number: '+14155552020', company: 'TechCorp Support' },
+      { number: '+442071234567', company: 'British Telecom' }
+    ];
+
     return (
       <div className="container">
-        <div className="card" style={{ maxWidth: '500px', margin: '0 auto' }}>
-          <h2 className="section-title" style={{ textAlign: 'center', marginBottom: '32px' }}>
+        <div className="card" style={{ maxWidth: '600px', margin: '0 auto' }}>
+          <h2 className="section-title" style={{ textAlign: 'center', marginBottom: '16px' }}>
             Verify Phone Number
           </h2>
           <p style={{ textAlign: 'center', color: 'var(--gray-600)', marginBottom: '32px' }}>
             Check if a phone number is verified by a legitimate business or government agency
           </p>
+          
           <form onSubmit={handleVerify} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
             <div className="form-group">
               <label className="form-label">Phone Number</label>
@@ -342,27 +365,71 @@ function App() {
             </button>
           </form>
           
+          {/* Sample Numbers for Testing */}
+          <div style={{ marginTop: '24px', padding: '16px', background: 'var(--gray-50)', borderRadius: '8px' }}>
+            <h4 style={{ margin: '0 0 12px 0', color: 'var(--gray-700)', fontSize: '14px' }}>
+              🧪 Sample Numbers for Testing:
+            </h4>
+            <div style={{ display: 'grid', gap: '8px' }}>
+              {sampleNumbers.map((sample) => (
+                <button
+                  key={sample.number}
+                  onClick={() => setPhoneNumber(sample.number)}
+                  style={{
+                    background: 'white',
+                    border: '1px solid var(--gray-300)',
+                    borderRadius: '6px',
+                    padding: '8px 12px',
+                    textAlign: 'left',
+                    cursor: 'pointer',
+                    fontSize: '14px',
+                    color: 'var(--gray-700)',
+                    transition: 'all 0.2s ease'
+                  }}
+                  onMouseEnter={(e) => e.target.style.background = 'var(--green-50)'}
+                  onMouseLeave={(e) => e.target.style.background = 'white'}
+                >
+                  <strong>{sample.number}</strong> - {sample.company}
+                </button>
+              ))}
+            </div>
+          </div>
+          
+          {/* Verification Result */}
           {verificationResult && (
             <div className={verificationResult.is_verified ? 'verification-success' : 'verification-fail'}>
-              <div className="verification-icon">
+              <div className="verification-icon" style={{ fontSize: '24px' }}>
                 {verificationResult.is_verified ? '✅' : '❌'}
               </div>
-              <div>
+              <div style={{ flex: 1 }}>
                 {verificationResult.is_verified ? (
                   <div>
-                    <p style={{ fontWeight: '600', margin: '0 0 4px 0' }}>Verified by Check Vero</p>
-                    <p style={{ margin: '0 0 4px 0' }}>{verificationResult.company_name}</p>
+                    <p style={{ fontWeight: '700', margin: '0 0 8px 0', fontSize: '18px' }}>
+                      Verified by Check Vero
+                    </p>
+                    <p style={{ margin: '0 0 8px 0', fontSize: '16px', fontWeight: '600' }}>
+                      {verificationResult.company_name}
+                    </p>
                     {verificationResult.description && (
-                      <p style={{ margin: '0', fontSize: '14px', opacity: '0.8' }}>
+                      <p style={{ margin: '0 0 8px 0', fontSize: '14px', opacity: '0.9' }}>
                         {verificationResult.description}
                       </p>
                     )}
+                    <p style={{ margin: '0', fontSize: '12px', opacity: '0.8' }}>
+                      Verified since: {new Date(verificationResult.verified_since).toLocaleDateString()}
+                      {verificationResult.verification_count && ` • Verified ${verificationResult.verification_count} times`}
+                    </p>
                   </div>
                 ) : (
                   <div>
-                    <p style={{ fontWeight: '600', margin: '0 0 4px 0' }}>Not Verified</p>
-                    <p style={{ margin: '0', fontSize: '14px' }}>
-                      This number is not registered with Check Vero. Use caution.
+                    <p style={{ fontWeight: '700', margin: '0 0 8px 0', fontSize: '18px' }}>
+                      Not Verified
+                    </p>
+                    <p style={{ margin: '0 0 8px 0', fontSize: '16px' }}>
+                      This number is not registered with Check Vero
+                    </p>
+                    <p style={{ margin: '0', fontSize: '14px', opacity: '0.9' }}>
+                      {verificationResult.warning || 'Proceed with caution. This may be a legitimate business not yet registered, or a potential scammer.'}
                     </p>
                   </div>
                 )}
