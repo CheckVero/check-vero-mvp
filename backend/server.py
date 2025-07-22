@@ -262,6 +262,94 @@ def advanced_ai_analysis(report_data):
         "analysis_details": analysis_details
     }
 
+# Initialize sample data on startup
+def initialize_sample_data():
+    """Initialize sample phone numbers for testing"""
+    sample_numbers = [
+        {
+            "phone_id": str(uuid.uuid4()),
+            "phone_number": "+31612345678",
+            "company_name": "Acme Bank",
+            "description": "Customer Service Line",
+            "registered_by": "system",
+            "verified": True,
+            "verification_date": datetime.utcnow(),
+            "created_at": datetime.utcnow(),
+            "updated_at": datetime.utcnow(),
+            "is_active": True,
+            "verification_count": 0
+        },
+        {
+            "phone_id": str(uuid.uuid4()),
+            "phone_number": "+61298765432",
+            "company_name": "Gov Australia",
+            "description": "Government Services",
+            "registered_by": "system",
+            "verified": True,
+            "verification_date": datetime.utcnow(),
+            "created_at": datetime.utcnow(),
+            "updated_at": datetime.utcnow(),
+            "is_active": True,
+            "verification_count": 0
+        },
+        {
+            "phone_id": str(uuid.uuid4()),
+            "phone_number": "+14155552020",
+            "company_name": "TechCorp Support",
+            "description": "Technical Support Hotline",
+            "registered_by": "system",
+            "verified": True,
+            "verification_date": datetime.utcnow(),
+            "created_at": datetime.utcnow(),
+            "updated_at": datetime.utcnow(),
+            "is_active": True,
+            "verification_count": 0
+        },
+        {
+            "phone_id": str(uuid.uuid4()),
+            "phone_number": "+442071234567",
+            "company_name": "British Telecom",
+            "description": "Customer Services",
+            "registered_by": "system",
+            "verified": True,
+            "verification_date": datetime.utcnow(),
+            "created_at": datetime.utcnow(),
+            "updated_at": datetime.utcnow(),
+            "is_active": True,
+            "verification_count": 0
+        }
+    ]
+    
+    for phone in sample_numbers:
+        # Only insert if not already exists
+        existing = db.phone_numbers.find_one({"phone_number": phone["phone_number"]})
+        if not existing:
+            db.phone_numbers.insert_one(phone)
+    
+    print(f"✅ Sample data initialized: {len(sample_numbers)} phone numbers")
+
+# Initialize sample data when server starts
+try:
+    initialize_sample_data()
+except Exception as e:
+    print(f"⚠️ Warning: Could not initialize sample data: {e}")
+
+# Function to log verification attempts
+def log_verification_attempt(phone_number, result, ip_address=None):
+    """Log phone number verification attempts"""
+    try:
+        log_entry = {
+            "log_id": str(uuid.uuid4()),
+            "phone_number": phone_number,
+            "result": result,
+            "ip_address": ip_address,
+            "timestamp": datetime.utcnow(),
+            "user_agent": None  # Could be added from request headers
+        }
+        db.verification_logs.insert_one(log_entry)
+    except Exception as e:
+        print(f"Warning: Could not log verification attempt: {e}")
+
 # Routes
 @app.get("/api/health")
 async def health_check():
