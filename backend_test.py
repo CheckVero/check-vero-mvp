@@ -120,15 +120,42 @@ class CheckVeroAPITester:
             token=token
         )
 
-    def test_phone_verification(self, phone_number):
+    def test_phone_verification(self, phone_number, expected_verified=None, expected_company=None):
         """Test phone number verification (public endpoint)"""
-        return self.run_test(
-            "Verify Phone Number",
+        success, response = self.run_test(
+            f"Verify Phone Number: {phone_number}",
             "POST",
             "/api/verify-phone",
             200,
             data={"phone_number": phone_number}
         )
+        
+        if success and response:
+            is_verified = response.get('is_verified', False)
+            company_name = response.get('company_name', '')
+            message = response.get('message', '')
+            
+            self.log(f"   Result: {'✅ VERIFIED' if is_verified else '❌ NOT VERIFIED'}")
+            if is_verified:
+                self.log(f"   Company: {company_name}")
+            self.log(f"   Message: {message}")
+            
+            # Validate expected results if provided
+            if expected_verified is not None:
+                if is_verified == expected_verified:
+                    self.log(f"   ✅ Verification status matches expected: {expected_verified}")
+                else:
+                    self.log(f"   ❌ Verification status mismatch. Expected: {expected_verified}, Got: {is_verified}")
+                    return False, response
+                    
+            if expected_company and is_verified:
+                if company_name == expected_company:
+                    self.log(f"   ✅ Company name matches expected: {expected_company}")
+                else:
+                    self.log(f"   ❌ Company name mismatch. Expected: {expected_company}, Got: {company_name}")
+                    return False, response
+        
+        return success, response
 
     def test_fraud_report_submission(self, token, report_type, description, phone_number=None, email_address=None):
         """Test fraud report submission (citizen only)"""
