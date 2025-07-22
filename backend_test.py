@@ -413,4 +413,10 @@ def main():
         return 1
 
 if __name__ == "__main__":
-    sys.exit(main())
+    import sys
+    
+    # Check if we want to run only the Check Vero verification tests
+    if len(sys.argv) > 1 and sys.argv[1] == "--check-vero-only":
+        sys.exit(test_check_vero_only())
+    else:
+        sys.exit(main())
