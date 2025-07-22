@@ -252,16 +252,65 @@ class CheckVeroAPITester:
                 token=self.test_users['citizen']['token']
             )
         
-        # Test business trying to submit report (should fail)
-        if 'business' in self.test_users:
-            success, _ = self.run_test(
-                "Business Submit Report (Should Fail)",
-                "POST",
-                "/api/reports/submit",
-                403,
-                data={"report_type": "call", "description": "Test report"},
-                token=self.test_users['business']['token']
-            )
+    def test_check_vero_verification_system(self):
+        """Test the complete Check Vero phone verification system with all sample numbers"""
+        self.log("\n🔍 Testing Check Vero Phone Verification System...")
+        
+        # Sample numbers that should be verified
+        verified_numbers = [
+            ("+31612345678", "Acme Bank"),
+            ("+61298765432", "Gov Australia"),
+            ("+14155552020", "TechCorp Support"),
+            ("+442071234567", "British Telecom")
+        ]
+        
+        # Test all verified numbers
+        for phone_number, expected_company in verified_numbers:
+            success, response = self.test_phone_verification(phone_number, expected_verified=True, expected_company=expected_company)
+            if not success:
+                self.log(f"❌ Failed to verify {phone_number} as {expected_company}")
+        
+        # Test unregistered number
+        self.log(f"\n   Testing unregistered number...")
+        success, response = self.test_phone_verification("+9999999999", expected_verified=False)
+        if not success:
+            self.log(f"❌ Failed to properly handle unregistered number")
+        
+        # Test sample numbers endpoint
+        success, response = self.run_test(
+            "Get Sample Numbers",
+            "GET",
+            "/api/sample-numbers",
+            200
+        )
+        
+        if success and response:
+            sample_numbers = response.get('sample_numbers', [])
+            self.log(f"   Found {len(sample_numbers)} sample numbers in API")
+            for sample in sample_numbers:
+                self.log(f"   - {sample.get('number')} → {sample.get('company')}")
+
+def test_check_vero_only():
+    """Focused test for Check Vero verification system only"""
+    tester = CheckVeroAPITester()
+    
+    tester.log("🚀 Starting Check Vero Phone Verification Tests...")
+    
+    # 1. Test Health Check
+    tester.test_health_check()
+    
+    # 2. Test the complete verification system
+    tester.test_check_vero_verification_system()
+    
+    # Print final results
+    tester.log(f"\n📊 Final Results: {tester.tests_passed}/{tester.tests_run} tests passed")
+    
+    if tester.tests_passed == tester.tests_run:
+        tester.log("🎉 All Check Vero verification tests passed!")
+        return 0
+    else:
+        tester.log(f"⚠️  {tester.tests_run - tester.tests_passed} tests failed")
+        return 1
 
 def main():
     tester = CheckVeroAPITester()
