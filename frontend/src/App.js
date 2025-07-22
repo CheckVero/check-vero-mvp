@@ -289,6 +289,7 @@ function App() {
   const VerificationCheck = () => {
     const [phoneNumber, setPhoneNumber] = useState('');
     const [verificationResult, setVerificationResult] = useState(null);
+    const [isVerifying, setIsVerifying] = useState(false);
 
     const handleVerify = async (e) => {
       e.preventDefault();
@@ -297,7 +298,7 @@ function App() {
         return;
       }
 
-      setLoading(true);
+      setIsVerifying(true);
       setVerificationResult(null); // Clear previous result
       
       try {
@@ -307,17 +308,31 @@ function App() {
           body: JSON.stringify({ phone_number: phoneNumber.trim() })
         });
         console.log('Verification response:', response);
-        setVerificationResult(response);
+        
+        // Force state update with a small delay to ensure proper rendering
+        setTimeout(() => {
+          setVerificationResult(response);
+          console.log('State updated with verification result:', response);
+        }, 100);
+        
       } catch (error) {
         console.error('Verification error:', error);
         showMessage('Verification failed: ' + error.message, 'error');
-        setVerificationResult({
-          is_verified: false,
-          message: '❌ Unable to verify number. Please try again.',
-          error: true
-        });
+        setTimeout(() => {
+          setVerificationResult({
+            is_verified: false,
+            message: '❌ Unable to verify number. Please try again.',
+            error: true
+          });
+        }, 100);
       }
-      setLoading(false);
+      setIsVerifying(false);
+    };
+
+    const handleSampleClick = (sampleNumber) => {
+      console.log('Clicking sample number:', sampleNumber);
+      setPhoneNumber(sampleNumber);
+      setVerificationResult(null); // Clear previous result when selecting new number
     };
 
     const sampleNumbers = [
@@ -344,17 +359,20 @@ function App() {
                 type="tel"
                 placeholder="Enter phone number (e.g., +1234567890)"
                 value={phoneNumber}
-                onChange={(e) => setPhoneNumber(e.target.value)}
+                onChange={(e) => {
+                  setPhoneNumber(e.target.value);
+                  setVerificationResult(null); // Clear result when typing
+                }}
                 className="form-input"
                 required
               />
             </div>
             <button
               type="submit"
-              disabled={loading}
+              disabled={isVerifying}
               className="btn-primary"
             >
-              {loading ? (
+              {isVerifying ? (
                 <>
                   <span className="loading-spinner"></span>
                   Verifying...
@@ -374,7 +392,8 @@ function App() {
               {sampleNumbers.map((sample) => (
                 <button
                   key={sample.number}
-                  onClick={() => setPhoneNumber(sample.number)}
+                  type="button"
+                  onClick={() => handleSampleClick(sample.number)}
                   style={{
                     background: 'white',
                     border: '1px solid var(--gray-300)',
@@ -395,10 +414,29 @@ function App() {
             </div>
           </div>
           
+          {/* Debug Info */}
+          {process.env.NODE_ENV === 'development' && verificationResult && (
+            <div style={{ marginTop: '16px', padding: '12px', background: '#f0f0f0', borderRadius: '4px', fontSize: '12px' }}>
+              Debug: {JSON.stringify(verificationResult, null, 2)}
+            </div>
+          )}
+          
           {/* Verification Result */}
           {verificationResult && (
-            <div className={verificationResult.is_verified ? 'verification-success' : 'verification-fail'}>
-              <div className="verification-icon" style={{ fontSize: '24px' }}>
+            <div 
+              style={{ 
+                marginTop: '24px',
+                padding: '20px',
+                borderRadius: '12px',
+                display: 'flex',
+                alignItems: 'flex-start',
+                gap: '12px',
+                border: verificationResult.is_verified ? '2px solid var(--primary-green)' : '2px solid #f87171',
+                background: verificationResult.is_verified ? 'var(--green-50)' : '#fef2f2',
+                color: verificationResult.is_verified ? 'var(--green-800)' : '#dc2626'
+              }}
+            >
+              <div style={{ fontSize: '24px', flexShrink: 0 }}>
                 {verificationResult.is_verified ? '✅' : '❌'}
               </div>
               <div style={{ flex: 1 }}>
