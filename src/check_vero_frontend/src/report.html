@@ -1,0 +1,43 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Report Suspicious Activity - Check Vero</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; background-color: #f4f4f4; }
+    h1 { color: #00C853; }
+    form { background: white; padding: 20px; border-radius: 8px; }
+    label { display: block; margin-top: 10px; }
+    input, select, textarea { width: 100%; padding: 10px; margin-top: 5px; border-radius: 5px; border: 1px solid #ccc; }
+    button { background-color: #00C853; color: white; padding: 10px 20px; margin-top: 15px; border: none; border-radius: 5px; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <h1>Report Suspicious Communication</h1>
+  <p>If you received a suspicious call, email or AI message, report it below. Our system will analyze and log your input.</p>
+  <form id="reportForm">
+    <label for="type">Type:</label>
+    <select id="type" name="type" required>
+      <option value="call">Phone Call</option>
+      <option value="email">Email</option>
+      <option value="ai">AI Chat/Agent</option>
+    </select>
+    <label for="description">Description:</label>
+    <textarea id="description" name="description" rows="4" required></textarea>
+    <label for="screenshot">Upload Screenshot/Audio:</label>
+    <input type="file" id="screenshot" name="screenshot">
+    <button type="submit">Submit Report</button>
+  </form>
+
+  <script>
+    document.getElementById("reportForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const type = document.getElementById("type").value;
+      const desc = document.getElementById("description").value;
+      console.log("Suspicious report submitted:", { type, desc });
+      alert("Thank you for your report. Our system will review it shortly.");
+      this.reset();
+    });
+  </script>
+</body>
+</html>
