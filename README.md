@@ -11,8 +11,10 @@ In a world of AI voice scams and deepfake messages, Check Vero verifies the **si
 – Real-time caller verification (banks, governments, platforms)  
 – AI-assisted risk & intent analysis  
 – Signal-staking via the $VERO token  
-– Evolved from a grant-backed MVP proposal  
-– Pilot traction with a Dutch bank (Australia)
+– Originally submitted as a 15K DFINITY grant proposal (not awarded)  
+– Now reapplying for 25K with improved MVP and real-world validation  
+– Pilot commitment secured with Dutch bank (Australia branch): customers will receive email invitation to test the app  
+– Public subsidy in preparation via awareness programs in both the Netherlands 🇳🇱 and Australia 🇦🇺
 
 ---
 
