@@ -101,3 +101,49 @@ You can run this project locally with the ICP SDK:
 ```bash
 dfx start --background
 dfx deploy
+
+---
+
+## ✅ ICP Demo MVP (Hackathon Submission)
+
+This is a minimal Motoko-based demo of the Check Vero verification system.
+
+### 📦 Features
+
+- Real-time phone number verification via Motoko backend  
+- Hardcoded responses for demo numbers  
+- Simple HTML/JS frontend  
+- ICP-native: deployable via Fleek or DFX
+
+---
+
+### 📱 Test Numbers
+
+| Phone Number     | Result            |
+|------------------|-------------------|
+| `+31612345678`   | ✅ Acme Bank       |
+| `+61298765432`   | ✅ Gov Australia   |
+| _Any other_      | ❌ Not registered |
+
+---
+
+### 🚀 Deploy Instructions
+
+To deploy this MVP via [Fleek](https://fleek.xyz):
+
+1. Upload this repo to GitHub (or fork it)
+2. Connect the repo to Fleek
+3. Use the following deploy settings:
+
+| Setting            | Value                    |
+|--------------------|--------------------------|
+| **Branch**         | `main`                   |
+| **Framework**      | `Other`                  |
+| **Publish directory** | `src/check_vero_frontend` |
+| **Build command**  | *(leave empty)*          |
+
+---
+
+Once deployed, your dApp will run live on ICP.
+
+---
