@@ -1,0 +1,19 @@
+# Ignore system files
+.DS_Store
+Thumbs.db
+
+# Ignore VSCode settings
+.vscode/
+
+# Ignore dfx-generated build artifacts
+/.dfx/
+/canisters/
+/dist/
+/node_modules/
+
+# Ignore logs
+*.log
+
+# Ignore temp files
+*.swp
+*.swo
