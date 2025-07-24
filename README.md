@@ -1,7 +1,7 @@
 # ✅ Check Vero – The AI-native Trust Layer for Digital Communication
 
 ![Built on ICP](https://img.shields.io/badge/Built_on-ICP-blueviolet)
-![Hackathon Submission](https://img.shields.io/badge/DoraHacks-x-DFINITY-orange)
+![Hackathon Submission](https://img.shields.io/badge/DoraHacks_x_DFINITY-orange)
 ![Live on Fleek](https://img.shields.io/badge/Live_on-Fleek-brightgreen)
 
 **Check Vero** is a decentralized verification protocol for real-time communication – starting with phone calls.
