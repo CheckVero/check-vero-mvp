@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Check Vero</title>
+  <style>
+    body { font-family: sans-serif; margin: 2rem; background: #f4f4f4; color: #222; }
+    h1 { color: #00C853; }
+    input { padding: 0.5rem; width: 300px; }
+    button { background: #00C853; color: white; border: none; padding: 0.5rem 1rem; margin-left: 0.5rem; cursor: pointer; }
+    #result { margin-top: 1rem; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h1>✅ Check Vero – Verify a Phone Number</h1>
+  <input id="phone" placeholder="+31612345678" />
+  <button onclick="verify()">Verify</button>
+  <div id="result"></div>
+  <script type="module">
+    import { verifyNumber } from "../../../.dfx/local/canisters/check_vero_backend";
+    async function verify() {
+      const phone = document.getElementById("phone").value;
+      const result = await verifyNumber(phone);
+      document.getElementById("result").innerText = result;
+      console.log(`[VERO] Checked: ${phone} → ${result}`);
+    }
+  </script>
+</body>
+</html>
