@@ -1065,7 +1065,11 @@ function App() {
               className="logo-container"
               style={{ background: 'none', border: 'none', cursor: 'pointer' }}
             >
-              <div className="logo-icon">✓</div>
+              <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" className="logo-icon" style={{ width: '32px', height: '32px', marginRight: '12px' }}>
+                <path d="M16 2L25 6V14C25 21 20 26 16 28C12 26 7 21 7 14V6L16 2Z" fill="#00C853"/>
+                <circle cx="16" cy="16" r="8" fill="#ffffff" opacity="0.9"/>
+                <path d="M13 16L15 18L19 14" stroke="#00C853" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
               <div className="logo-text">Check Vero</div>
             </button>
             <div style={{ display: 'flex', gap: '8px' }}>
