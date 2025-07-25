@@ -151,3 +151,20 @@ To deploy this MVP via [Fleek](https://fleek.xyz):
 Once deployed, your dApp will run live on ICP.
 
 ---
+
+## 🛠️ MVP Technical Overview (Hackathon Submission)
+
+This MVP simulates real-time phone number verification using a Motoko backend + HTML frontend.
+
+**Structure**
+- `main.mo`: Motoko backend that verifies known phone numbers (2 entries + fallback warning)
+- `index.html`: Simple UI with input field and `verify` button
+- Uses `Oisy Wallet` (planned) for identity-based access
+
+**Frontend Preview**
+- [✅ checkvero.com](https://checkvero.com)
+- Hosted via Fleek on Internet Computer Protocol
+
+**Deployment**
+- `dfx.json` defines frontend/backend structure
+- Fleek auto-deploy from GitHub (via `/src/check_vero_frontend` as publish path)
