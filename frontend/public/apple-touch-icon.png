@@ -1,0 +1,10 @@
+<svg width="180" height="180" viewBox="0 0 180 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Shield background -->
+  <path d="M90 10L140 30V78C140 120 115 150 90 162C65 150 40 120 40 78V30L90 10Z" fill="#00C853"/>
+  
+  <!-- Inner circle -->
+  <circle cx="90" cy="90" r="45" fill="#ffffff" opacity="0.95"/>
+  
+  <!-- Checkmark -->
+  <path d="M75 90L85 100L105 80" stroke="#00C853" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
