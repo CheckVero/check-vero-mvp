@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CheckVero MVP</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <h1>CheckVero MVP</h1>
+  <div>
+    <h2>Register User</h2>
+    <input type="text" id="id" placeholder="User ID">
+    <input type="email" id="email" placeholder="Email">
+    <input type="text" id="name" placeholder="Name">
+    <button onclick="register()">Register</button>
+  </div>
+  <div>
+    <h2>Verify User</h2>
+    <input type="text" id="verifyId" placeholder="User ID">
+    <input type="email" id="verifyEmail" placeholder="Email">
+    <button onclick="verify()">Verify</button>
+    <p id="result"></p>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
