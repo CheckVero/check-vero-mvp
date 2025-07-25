@@ -964,7 +964,11 @@ function App() {
       <div className="hero-section">
         <div className="hero-content">
           <div className="logo-container" style={{ justifyContent: 'center', marginBottom: '40px' }}>
-            <div className="logo-icon" style={{ fontSize: '32px', width: '64px', height: '64px' }}>✓</div>
+            <svg width="64" height="64" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ width: '64px', height: '64px', marginRight: '16px' }}>
+              <path d="M16 2L25 6V14C25 21 20 26 16 28C12 26 7 21 7 14V6L16 2Z" fill="#00C853"/>
+              <circle cx="16" cy="16" r="8" fill="#ffffff" opacity="0.9"/>
+              <path d="M13 16L15 18L19 14" stroke="#00C853" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
             <div className="logo-text" style={{ fontSize: '32px' }}>Check Vero</div>
           </div>
           <h1 className="hero-title">
