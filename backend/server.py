@@ -352,6 +352,11 @@ def log_verification_attempt(phone_number, result, ip_address=None):
         print(f"Warning: Could not log verification attempt: {e}")
 
 # Routes
+@app.options("/{full_path:path}")
+async def options_handler(full_path: str):
+    """Handle CORS preflight requests"""
+    return {"message": "OK"}
+
 @app.get("/api/health")
 async def health_check():
     return {"status": "healthy", "service": "Check Vero API", "version": "1.0.0"}
