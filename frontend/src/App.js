@@ -1253,9 +1253,15 @@ function App() {
       
       {message && (
         <div className="container" style={{ marginTop: '20px' }}>
-          <div className={`${message.type === 'error' ? 'message-error' : 'message-success'}`}>
+          <div className={`${
+            message.type === 'error' ? 'message-error' : 
+            message.type === 'info' ? 'message-info' : 
+            'message-success'
+          }`}>
             <div className="message-icon">
-              {message.type === 'error' ? '❌' : '✅'}
+              {message.type === 'error' ? '❌' : 
+               message.type === 'info' ? 'ℹ️' : 
+               '✅'}
             </div>
             <div>{message.text}</div>
           </div>
