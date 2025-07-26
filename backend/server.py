@@ -357,6 +357,15 @@ async def options_handler(full_path: str):
     """Handle CORS preflight requests"""
     return {"message": "OK"}
 
+@app.get("/api/debug/test")
+async def debug_test():
+    """Debug endpoint for testing connectivity"""
+    return {
+        "status": "debug_ok",
+        "timestamp": datetime.utcnow().isoformat(),
+        "message": "If you can see this, the API is working correctly"
+    }
+
 @app.get("/api/health")
 async def health_check():
     return {"status": "healthy", "service": "Check Vero API", "version": "1.0.0"}
