@@ -19,6 +19,24 @@ function App() {
     if (token && userData) {
       setUser(JSON.parse(userData));
     }
+    
+    // Test API connectivity on app load
+    const testConnectivity = async () => {
+      try {
+        console.log('🔧 DEBUG: Testing API connectivity...');
+        const response = await fetch(`${API_URL}/api/debug/test`);
+        if (response.ok) {
+          const data = await response.json();
+          console.log('🔧 DEBUG: API connectivity test successful:', data);
+        } else {
+          console.error('🔧 DEBUG: API connectivity test failed:', response.status);
+        }
+      } catch (error) {
+        console.error('🔧 DEBUG: API connectivity test error:', error);
+      }
+    };
+    
+    testConnectivity();
   }, []);
 
   const apiCall = async (endpoint, options = {}) => {
