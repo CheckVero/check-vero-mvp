@@ -382,6 +382,18 @@ body {
   gap: 12px;
 }
 
+.message-info {
+  background: #EFF6FF;
+  color: #1D4ED8;
+  border: 2px solid #BFDBFE;
+  padding: 16px 20px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
 .message-icon {
   font-size: 20px;
   flex-shrink: 0;
