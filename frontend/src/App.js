@@ -3,6 +3,10 @@ import './App.css';
 
 const API_URL = process.env.REACT_APP_BACKEND_URL || import.meta.env.REACT_APP_BACKEND_URL || 'https://b175beef-7ded-4a3d-8fd1-e5ba7a9ba148.preview.emergentagent.com';
 
+console.log('🔧 DEBUG: API_URL =', API_URL);
+console.log('🔧 DEBUG: process.env.REACT_APP_BACKEND_URL =', process.env.REACT_APP_BACKEND_URL);
+console.log('🔧 DEBUG: import.meta.env.REACT_APP_BACKEND_URL =', import.meta.env?.REACT_APP_BACKEND_URL);
+
 function App() {
   const [user, setUser] = useState(null);
   const [currentView, setCurrentView] = useState('home');
