@@ -48,44 +48,62 @@ function App() {
     const token = localStorage.getItem('token');
     const headers = {
       'Content-Type': 'application/json',
+      'Cache-Control': 'no-cache',
+      'Pragma': 'no-cache',
       ...(token && { Authorization: `Bearer ${token}` }),
       ...options.headers
     };
 
     console.log('🔧 DEBUG: Headers:', headers);
 
-    try {
-      console.log('🔧 DEBUG: About to fetch...');
-      const response = await fetch(fullUrl, {
-        ...options,
-        headers
-      });
+    // Add retry logic for failed requests
+    const maxRetries = 2;
+    let attempt = 0;
 
-      console.log('🔧 DEBUG: Response received, status:', response.status);
-      console.log('🔧 DEBUG: Response ok:', response.ok);
-      
-      if (!response.ok) {
-        const errorData = await response.text();
-        console.error('🔧 DEBUG: API Error response:', errorData);
-        throw new Error(`API Error: ${response.status} - ${errorData}`);
-      }
+    while (attempt <= maxRetries) {
+      try {
+        console.log(`🔧 DEBUG: Attempt ${attempt + 1} of ${maxRetries + 1}`);
+        
+        const response = await fetch(fullUrl, {
+          ...options,
+          headers,
+          mode: 'cors',
+          credentials: 'omit'
+        });
 
-      const data = await response.json();
-      console.log('🔧 DEBUG: Response data:', data);
-      return data;
-    } catch (error) {
-      console.error('🔧 DEBUG: API call failed with error:', error);
-      console.error('🔧 DEBUG: Error type:', error.constructor.name);
-      console.error('🔧 DEBUG: Error message:', error.message);
-      console.error('🔧 DEBUG: Error stack:', error.stack);
-      
-      // More specific error handling
-      if (error.message.includes('Failed to fetch')) {
-        console.error('🔧 DEBUG: This is a network/CORS error');
-        throw new Error(`Network Error: Unable to connect to ${fullUrl}. Please check your internet connection.`);
+        console.log('🔧 DEBUG: Response received, status:', response.status);
+        console.log('🔧 DEBUG: Response ok:', response.ok);
+        
+        if (!response.ok) {
+          const errorData = await response.text();
+          console.error('🔧 DEBUG: API Error response:', errorData);
+          throw new Error(`API Error: ${response.status} - ${errorData}`);
+        }
+
+        const data = await response.json();
+        console.log('🔧 DEBUG: Response data:', data);
+        return data;
+        
+      } catch (error) {
+        console.error(`🔧 DEBUG: Attempt ${attempt + 1} failed:`, error);
+        
+        if (attempt === maxRetries) {
+          console.error('🔧 DEBUG: All attempts failed, throwing error');
+          console.error('🔧 DEBUG: Error type:', error.constructor.name);
+          console.error('🔧 DEBUG: Error message:', error.message);
+          
+          // More specific error handling
+          if (error.message.includes('Failed to fetch') || error.name === 'TypeError') {
+            throw new Error(`Network Error: Unable to connect to the server. Please check your internet connection and try again. (${error.message})`);
+          }
+          
+          throw error;
+        }
+        
+        attempt++;
+        console.log(`🔧 DEBUG: Retrying in 1 second... (attempt ${attempt + 1})`);
+        await new Promise(resolve => setTimeout(resolve, 1000));
       }
-      
-      throw error;
     }
   };
 
