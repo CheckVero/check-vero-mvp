@@ -22,7 +22,11 @@ function App() {
   }, []);
 
   const apiCall = async (endpoint, options = {}) => {
-    console.log('Making API call to:', `${API_URL}${endpoint}`);
+    const fullUrl = `${API_URL}${endpoint}`;
+    console.log('🔧 DEBUG: Making API call to:', fullUrl);
+    console.log('🔧 DEBUG: API_URL used:', API_URL);
+    console.log('🔧 DEBUG: Options:', options);
+    
     const token = localStorage.getItem('token');
     const headers = {
       'Content-Type': 'application/json',
@@ -30,25 +34,39 @@ function App() {
       ...options.headers
     };
 
+    console.log('🔧 DEBUG: Headers:', headers);
+
     try {
-      const response = await fetch(`${API_URL}${endpoint}`, {
+      console.log('🔧 DEBUG: About to fetch...');
+      const response = await fetch(fullUrl, {
         ...options,
         headers
       });
 
-      console.log('Response status:', response.status);
+      console.log('🔧 DEBUG: Response received, status:', response.status);
+      console.log('🔧 DEBUG: Response ok:', response.ok);
       
       if (!response.ok) {
         const errorData = await response.text();
-        console.error('API Error:', errorData);
+        console.error('🔧 DEBUG: API Error response:', errorData);
         throw new Error(`API Error: ${response.status} - ${errorData}`);
       }
 
       const data = await response.json();
-      console.log('Response data:', data);
+      console.log('🔧 DEBUG: Response data:', data);
       return data;
     } catch (error) {
-      console.error('API call failed:', error);
+      console.error('🔧 DEBUG: API call failed with error:', error);
+      console.error('🔧 DEBUG: Error type:', error.constructor.name);
+      console.error('🔧 DEBUG: Error message:', error.message);
+      console.error('🔧 DEBUG: Error stack:', error.stack);
+      
+      // More specific error handling
+      if (error.message.includes('Failed to fetch')) {
+        console.error('🔧 DEBUG: This is a network/CORS error');
+        throw new Error(`Network Error: Unable to connect to ${fullUrl}. Please check your internet connection.`);
+      }
+      
       throw error;
     }
   };
