@@ -1,0 +1,13 @@
+# Production Environment Configuration for checkvero.com
+
+# Backend API URL - This should be set in Vercel environment variables
+REACT_APP_BACKEND_URL=https://b175beef-7ded-4a3d-8fd1-e5ba7a9ba148.preview.emergentagent.com
+
+# Alternative backup URLs in case primary fails
+REACT_APP_BACKUP_API_URL_1=https://b175beef-7ded-4a3d-8fd1-e5ba7a9ba148.preview.emergentagent.com/api
+REACT_APP_BACKUP_API_URL_2=https://b175beef-7ded-4a3d-8fd1-e5ba7a9ba148-api.preview.emergentagent.com
+
+# Production settings
+NODE_ENV=production
+REACT_APP_ENVIRONMENT=production
+REACT_APP_VERSION=1.0.0
