@@ -17,10 +17,16 @@ import re
 # Initialize FastAPI app
 app = FastAPI(title="Check Vero API", description="Professional fraud verification platform")
 
-# Add CORS middleware with explicit configuration
+# Add CORS middleware with explicit configuration for production domains
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # In production, specify exact domains
+    allow_origins=[
+        "https://checkvero.com",
+        "https://www.checkvero.com", 
+        "https://b175beef-7ded-4a3d-8fd1-e5ba7a9ba148.preview.emergentagent.com",
+        "http://localhost:3000",  # For development
+        "*"  # Fallback for other domains
+    ],
     allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     allow_headers=["*"],
