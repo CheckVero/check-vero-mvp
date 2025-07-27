@@ -51,10 +51,11 @@ function App() {
   }, []);
 
   const apiCall = async (endpoint, options = {}) => {
-    const fullUrl = `${API_URL}${endpoint}`;
-    console.log('🔧 DEBUG: Making API call to:', fullUrl);
-    console.log('🔧 DEBUG: API_URL used:', API_URL);
-    console.log('🔧 DEBUG: Options:', options);
+    const urlsToTry = [API_URL, ...BACKUP_API_URLS].filter((url, index, arr) => 
+      arr.indexOf(url) === index // Remove duplicates
+    );
+    
+    console.log('🔧 DEBUG: URLs to try:', urlsToTry);
     
     const token = localStorage.getItem('token');
     const headers = {
@@ -65,57 +66,68 @@ function App() {
       ...options.headers
     };
 
-    console.log('🔧 DEBUG: Headers:', headers);
+    let lastError = null;
 
-    // Add retry logic for failed requests
-    const maxRetries = 2;
-    let attempt = 0;
+    // Try each URL in sequence
+    for (let urlIndex = 0; urlIndex < urlsToTry.length; urlIndex++) {
+      const baseUrl = urlsToTry[urlIndex];
+      const fullUrl = `${baseUrl}${endpoint}`;
+      
+      console.log(`🔧 DEBUG: Trying URL ${urlIndex + 1}/${urlsToTry.length}: ${fullUrl}`);
 
-    while (attempt <= maxRetries) {
-      try {
-        console.log(`🔧 DEBUG: Attempt ${attempt + 1} of ${maxRetries + 1}`);
-        
-        const response = await fetch(fullUrl, {
-          ...options,
-          headers,
-          mode: 'cors',
-          credentials: 'omit'
-        });
+      // Add retry logic for each URL
+      const maxRetries = 2;
+      let attempt = 0;
 
-        console.log('🔧 DEBUG: Response received, status:', response.status);
-        console.log('🔧 DEBUG: Response ok:', response.ok);
-        
-        if (!response.ok) {
-          const errorData = await response.text();
-          console.error('🔧 DEBUG: API Error response:', errorData);
-          throw new Error(`API Error: ${response.status} - ${errorData}`);
-        }
-
-        const data = await response.json();
-        console.log('🔧 DEBUG: Response data:', data);
-        return data;
-        
-      } catch (error) {
-        console.error(`🔧 DEBUG: Attempt ${attempt + 1} failed:`, error);
-        
-        if (attempt === maxRetries) {
-          console.error('🔧 DEBUG: All attempts failed, throwing error');
-          console.error('🔧 DEBUG: Error type:', error.constructor.name);
-          console.error('🔧 DEBUG: Error message:', error.message);
+      while (attempt <= maxRetries) {
+        try {
+          console.log(`🔧 DEBUG: Attempt ${attempt + 1} of ${maxRetries + 1} for ${fullUrl}`);
           
-          // More specific error handling
-          if (error.message.includes('Failed to fetch') || error.name === 'TypeError') {
-            throw new Error(`Network Error: Unable to connect to the server. Please check your internet connection and try again. (${error.message})`);
+          const response = await fetch(fullUrl, {
+            ...options,
+            headers,
+            mode: 'cors',
+            credentials: 'omit'
+          });
+
+          console.log('🔧 DEBUG: Response received, status:', response.status);
+          
+          if (!response.ok) {
+            const errorData = await response.text();
+            console.error('🔧 DEBUG: API Error response:', errorData);
+            throw new Error(`API Error: ${response.status} - ${errorData}`);
+          }
+
+          const data = await response.json();
+          console.log('🔧 DEBUG: Response data:', data);
+          console.log(`🔧 DEBUG: SUCCESS with URL: ${fullUrl}`);
+          return data;
+          
+        } catch (error) {
+          console.error(`🔧 DEBUG: Attempt ${attempt + 1} failed for ${fullUrl}:`, error);
+          lastError = error;
+          
+          if (attempt === maxRetries) {
+            console.error(`🔧 DEBUG: All attempts failed for ${fullUrl}`);
+            break; // Try next URL
           }
           
-          throw error;
+          attempt++;
+          console.log(`🔧 DEBUG: Retrying in 1 second... (attempt ${attempt + 1})`);
+          await new Promise(resolve => setTimeout(resolve, 1000));
         }
-        
-        attempt++;
-        console.log(`🔧 DEBUG: Retrying in 1 second... (attempt ${attempt + 1})`);
-        await new Promise(resolve => setTimeout(resolve, 1000));
       }
     }
+
+    // If we reach here, all URLs failed
+    console.error('🔧 DEBUG: All URLs failed, throwing final error');
+    console.error('🔧 DEBUG: Last error:', lastError);
+    
+    if (lastError?.message?.includes('Failed to fetch') || lastError?.name === 'TypeError') {
+      throw new Error(`Network Error: Unable to connect to the Check Vero servers. Please check your internet connection and try again. If the problem persists, the servers may be temporarily unavailable.`);
+    }
+    
+    throw lastError || new Error('Unknown error occurred while connecting to the server');
   };
 
   const showMessage = (msg, type = 'success') => {
