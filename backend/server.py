@@ -374,7 +374,24 @@ async def debug_test():
 
 @app.get("/api/health")
 async def health_check():
-    return {"status": "healthy", "service": "Check Vero API", "version": "1.0.0"}
+    return {
+        "status": "healthy", 
+        "service": "Check Vero API", 
+        "version": "1.0.0",
+        "timestamp": datetime.utcnow().isoformat(),
+        "cors_enabled": True,
+        "allowed_origins": ["https://checkvero.com", "https://www.checkvero.com"]
+    }
+
+@app.get("/api/cors-test")
+async def cors_test():
+    """Test endpoint specifically for CORS verification"""
+    return {
+        "status": "cors_ok",
+        "message": "CORS is working correctly from checkvero.com",
+        "timestamp": datetime.utcnow().isoformat(),
+        "backend_url": "https://b175beef-7ded-4a3d-8fd1-e5ba7a9ba148.preview.emergentagent.com"
+    }
 
 @app.post("/api/register", response_model=Token)
 async def register_user(user: UserCreate):
