@@ -1,0 +1,13 @@
+{
+  "name": "checkvero-api",
+  "version": "1.0.0",
+  "description": "Check Vero Backend API - Persistent deployment",
+  "main": "api/index.py",
+  "scripts": {
+    "start": "python -m uvicorn api.index:app --host 0.0.0.0 --port $PORT"
+  },
+  "dependencies": {},
+  "engines": {
+    "python": "3.9"
+  }
+}
