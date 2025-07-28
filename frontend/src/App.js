@@ -1,18 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 
-// Production-ready API URL configuration
-const PRODUCTION_API_URL = 'https://b175beef-7ded-4a3d-8fd1-e5ba7a9ba148.preview.emergentagent.com';
+// PERSISTENT BACKEND API CONFIGURATION
+// This backend stays online 24/7 regardless of frontend deployments
+const PERSISTENT_API_URL = 'https://checkvero-api.vercel.app';
+
+// Fallback URLs in case primary fails
 const BACKUP_API_URLS = [
-  'https://b175beef-7ded-4a3d-8fd1-e5ba7a9ba148.preview.emergentagent.com',
-  'https://b175beef-7ded-4a3d-8fd1-e5ba7a9ba148-api.preview.emergentagent.com'
+  'https://checkvero-api.vercel.app',
+  'https://checkvero-backend.vercel.app',
+  'https://b175beef-7ded-4a3d-8fd1-e5ba7a9ba148.preview.emergentagent.com'
 ];
 
+// Use environment variable if available, otherwise use persistent URL
 const API_URL = process.env.REACT_APP_BACKEND_URL || 
                 import.meta.env.REACT_APP_BACKEND_URL || 
-                PRODUCTION_API_URL;
+                PERSISTENT_API_URL;
 
 console.log('🔧 DEBUG: API_URL =', API_URL);
+console.log('🔧 DEBUG: PERSISTENT_API_URL =', PERSISTENT_API_URL);
 console.log('🔧 DEBUG: process.env.REACT_APP_BACKEND_URL =', process.env.REACT_APP_BACKEND_URL);
 console.log('🔧 DEBUG: import.meta.env.REACT_APP_BACKEND_URL =', import.meta.env?.REACT_APP_BACKEND_URL);
 console.log('🔧 DEBUG: Current domain =', window.location.hostname);
