@@ -98,73 +98,52 @@ This project runs live on ICP with a functional demo for verifying trusted calle
 
 ---
 
-## 🧪 Local Dev
+## ✅ ICP Demo MVP (Hackathon Submission)
 
-You can run this project locally with the ICP SDK:
+This MVP simulates real-time phone number verification using a **Motoko backend** and a **HTML/JS frontend**. It is built natively for the Internet Computer, ready for grant review and hackathon presentation.
+
+### 🧱 Structure
+
+- `main.mo`: Motoko backend verifying known phone numbers (`+31612345678`, `+61298765432`)
+- `index.html`: Simple UI with input field + ✅ verify button
+- `dfx.json`: Defines frontend/backend for Fleek or CLI deployment
+- `Oisy Wallet`: Identity support planned (placeholder)
+
+### 🌐 Live Preview
+
+- ✅ [checkvero.com](https://checkvero.com)
+- Hosted via Fleek (auto-deploy from GitHub)
+
+### 🚀 Deployment Instructions
+
+To deploy this MVP via [Fleek](https://fleek.xyz):
+
+1. Upload this repo to GitHub  
+2. Connect repo to Fleek  
+3. Use the following settings:
+
+| Setting               | Value                        |
+|-----------------------|------------------------------|
+| **Branch**            | `main`                       |
+| **Framework**         | `Other`                      |
+| **Publish directory** | `src/check_vero_frontend`    |
+| **Build command**     | *(leave empty)*              |
+
+Once deployed, the dApp runs fully on ICP.
+
+### ⚙️ Local Development
+
+To test locally with DFX:
 
 ```bash
 dfx start --background
 dfx deploy
+```
 
----
+### 📞 Test Numbers
 
-## ✅ ICP Demo MVP (Hackathon Submission)
-
-This is a minimal Motoko-based demo of the Check Vero verification system.
-
-### 📦 Features
-
-- Real-time phone number verification via Motoko backend  
-- Hardcoded responses for demo numbers  
-- Simple HTML/JS frontend  
-- ICP-native: deployable via Fleek or DFX
-
----
-
-### 📱 Test Numbers
-
-| Phone Number     | Result            |
-|------------------|-------------------|
-| `+31612345678`   | ✅ Acme Bank       |
-| `+61298765432`   | ✅ Gov Australia   |
+| Phone Number     | Result          |
+|------------------|------------------|
+| `+31612345678`   | ✅ Acme Bank     |
+| `+61298765432`   | ✅ Gov Australia |
 | _Any other_      | ❌ Not registered |
-
----
-
-### 🚀 Deploy Instructions
-
-To deploy this MVP via [Fleek](https://fleek.xyz):
-
-1. Upload this repo to GitHub (or fork it)
-2. Connect the repo to Fleek
-3. Use the following deploy settings:
-
-| Setting            | Value                    |
-|--------------------|--------------------------|
-| **Branch**         | `main`                   |
-| **Framework**      | `Other`                  |
-| **Publish directory** | `src/check_vero_frontend` |
-| **Build command**  | *(leave empty)*          |
-
----
-
-Once deployed, your dApp will run live on ICP.
-
----
-
-## 🛠️ MVP Technical Overview (Hackathon Submission)
-
-This MVP simulates real-time phone number verification using a Motoko backend + HTML frontend.
-
-**Structure**
-- `main.mo`: Motoko backend that verifies known phone numbers (2 entries + fallback warning)
-- `index.html`: Simple UI with input field and `verify` button
-- Uses `Oisy Wallet` (planned) for identity-based access
-
-**Frontend Preview**
-- [✅ checkvero.com](https://checkvero.com)
-- Hosted via Fleek on Internet Computer Protocol
-
-**Deployment**
-- `dfx.json` defines frontend/backend structure
-- Fleek auto-deploy from GitHub (via `/src/check_vero_frontend` as publish path)
