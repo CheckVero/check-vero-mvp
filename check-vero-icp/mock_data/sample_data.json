@@ -1,104 +1,139 @@
 {
   "sample_phone_numbers": [
     {
+      "id": "phone1",
       "phone_number": "+31612345678",
       "company_name": "Acme Bank",
       "description": "Customer Service Line",
-      "country": "Netherlands",
-      "industry": "Banking",
-      "verification_status": "verified",
-      "registration_date": "2024-01-15"
+      "registered_by": "system",
+      "verified": true,
+      "verification_count": 0,
+      "is_active": true,
+      "category": "banking",
+      "country": "Netherlands"
     },
     {
-      "phone_number": "+61298765432", 
+      "id": "phone2",
+      "phone_number": "+61298765432",
       "company_name": "Gov Australia",
       "description": "Government Services",
-      "country": "Australia",
-      "industry": "Government",
-      "verification_status": "verified",
-      "registration_date": "2024-01-20"
+      "registered_by": "system",
+      "verified": true,
+      "verification_count": 0,
+      "is_active": true,
+      "category": "government",
+      "country": "Australia"
     },
     {
+      "id": "phone3",
       "phone_number": "+14155552020",
-      "company_name": "TechCorp Support", 
+      "company_name": "TechCorp Support",
       "description": "Technical Support Hotline",
-      "country": "United States",
-      "industry": "Technology",
-      "verification_status": "verified",
-      "registration_date": "2024-02-01"
+      "registered_by": "system",
+      "verified": true,
+      "verification_count": 0,
+      "is_active": true,
+      "category": "technology",
+      "country": "United States"
     },
     {
+      "id": "phone4",
       "phone_number": "+442071234567",
       "company_name": "British Telecom",
-      "description": "Customer Services", 
-      "country": "United Kingdom",
-      "industry": "Telecommunications",
-      "verification_status": "verified",
-      "registration_date": "2024-02-10"
-    },
-    {
-      "phone_number": "+33142857500",
-      "company_name": "Société Générale",
-      "description": "Fraud Prevention Hotline",
-      "country": "France", 
-      "industry": "Banking",
-      "verification_status": "verified",
-      "registration_date": "2024-02-15"
-    },
-    {
-      "phone_number": "+81362124567",
-      "company_name": "NTT DoCoMo",
-      "description": "Mobile Services Support",
-      "country": "Japan",
-      "industry": "Telecommunications",
-      "verification_status": "verified",
-      "registration_date": "2024-02-20"
+      "description": "Customer Services",
+      "registered_by": "system",
+      "verified": true,
+      "verification_count": 0,
+      "is_active": true,
+      "category": "telecommunications",
+      "country": "United Kingdom"
     }
   ],
-  "fraud_examples": [
+  "sample_fraud_reports": [
     {
-      "type": "high_risk",
-      "description": "Urgent! Your account has been suspended. Click this link immediately to verify your identity and avoid permanent closure.",
-      "keywords": ["urgent", "suspended", "click", "verify", "immediately"]
+      "description": "Urgent! Your account will be suspended in 24 hours. Click this link to verify your account immediately!",
+      "expected_risk": "HIGH",
+      "reasons": ["Urgency tactics", "Account suspension threat", "Click link request"]
     },
     {
-      "type": "high_risk", 
-      "description": "Congratulations! You've won the lottery! Send us your bank details to claim your $1,000,000 prize now!",
-      "keywords": ["congratulations", "won", "lottery", "bank details", "prize"]
+      "description": "Congratulations! You've won a $10,000 prize in our lottery. Reply with your bank details to claim.",
+      "expected_risk": "HIGH",
+      "reasons": ["Fake prize notification", "Request for bank details", "Too good to be true"]
     },
     {
-      "type": "medium_risk",
-      "description": "Your security alert: We noticed unusual activity on your account. Please confirm your details by calling this number.",
-      "keywords": ["security alert", "unusual activity", "confirm"]
+      "description": "Hello, this is John from your bank's security department. We need to verify your account due to suspicious activity.",
+      "expected_risk": "MEDIUM",
+      "reasons": ["Impersonation attempt", "Security urgency", "Vague credentials"]
     },
     {
-      "type": "low_risk",
-      "description": "Thank you for your payment. Your transaction has been processed successfully. Reference number: TX123456789.",
-      "keywords": ["thank you", "payment", "processed", "reference"]
+      "description": "Hi, this is a reminder that your appointment is scheduled for tomorrow at 2 PM. Please confirm.",
+      "expected_risk": "LOW",
+      "reasons": ["Legitimate appointment reminder", "No suspicious elements"]
     }
   ],
-  "test_scenarios": [
-    {
-      "name": "Verify Known Company",
-      "phone": "+31612345678",
-      "expected": "verified",
-      "company": "Acme Bank"
+  "test_scenarios": {
+    "citizen_flow": {
+      "register": {
+        "username": "john_citizen",
+        "email": "john@example.com",
+        "role": "citizen"
+      },
+      "verify_numbers": [
+        "+31612345678",
+        "+1234567890"
+      ],
+      "submit_report": {
+        "type": "call",
+        "phone": "+1555999999",
+        "description": "Caller claimed to be from IRS demanding immediate payment via gift cards"
+      }
     },
-    {
-      "name": "Check Unknown Number", 
-      "phone": "+1234567890",
-      "expected": "not_verified",
-      "company": null
-    },
-    {
-      "name": "Submit High Risk Report",
-      "description": "Urgent verify account suspended click now",
-      "expected_risk": "HIGH"
-    },
-    {
-      "name": "Submit Low Risk Report",
-      "description": "Thank you for your payment confirmation",
-      "expected_risk": "LOW"
+    "business_flow": {
+      "register": {
+        "username": "acme_corp",
+        "email": "contact@acme.com",
+        "role": "business",
+        "company_name": "Acme Corporation"
+      },
+      "register_phone": {
+        "phone": "+1800555000",
+        "company": "Acme Corporation",
+        "description": "Customer Support Line"
+      }
     }
+  },
+  "suspicious_keywords": [
+    "urgent",
+    "click now",
+    "verify account",
+    "suspended",
+    "prize",
+    "winner",
+    "lottery",
+    "limited time",
+    "act fast",
+    "congratulations",
+    "claim now",
+    "bank details",
+    "social security",
+    "immediate action",
+    "confirm identity",
+    "security alert",
+    "account locked",
+    "expires today",
+    "final notice",
+    "tax refund"
+  ],
+  "legitimate_phrases": [
+    "appointment reminder",
+    "delivery notification",
+    "service update",
+    "policy change",
+    "newsletter",
+    "survey invitation",
+    "event invitation",
+    "weather alert",
+    "traffic update",
+    "community notice"
   ]
 }
