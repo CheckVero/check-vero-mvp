@@ -1,0 +1,104 @@
+{
+  "sample_phone_numbers": [
+    {
+      "phone_number": "+31612345678",
+      "company_name": "Acme Bank",
+      "description": "Customer Service Line",
+      "country": "Netherlands",
+      "industry": "Banking",
+      "verification_status": "verified",
+      "registration_date": "2024-01-15"
+    },
+    {
+      "phone_number": "+61298765432", 
+      "company_name": "Gov Australia",
+      "description": "Government Services",
+      "country": "Australia",
+      "industry": "Government",
+      "verification_status": "verified",
+      "registration_date": "2024-01-20"
+    },
+    {
+      "phone_number": "+14155552020",
+      "company_name": "TechCorp Support", 
+      "description": "Technical Support Hotline",
+      "country": "United States",
+      "industry": "Technology",
+      "verification_status": "verified",
+      "registration_date": "2024-02-01"
+    },
+    {
+      "phone_number": "+442071234567",
+      "company_name": "British Telecom",
+      "description": "Customer Services", 
+      "country": "United Kingdom",
+      "industry": "Telecommunications",
+      "verification_status": "verified",
+      "registration_date": "2024-02-10"
+    },
+    {
+      "phone_number": "+33142857500",
+      "company_name": "Société Générale",
+      "description": "Fraud Prevention Hotline",
+      "country": "France", 
+      "industry": "Banking",
+      "verification_status": "verified",
+      "registration_date": "2024-02-15"
+    },
+    {
+      "phone_number": "+81362124567",
+      "company_name": "NTT DoCoMo",
+      "description": "Mobile Services Support",
+      "country": "Japan",
+      "industry": "Telecommunications",
+      "verification_status": "verified",
+      "registration_date": "2024-02-20"
+    }
+  ],
+  "fraud_examples": [
+    {
+      "type": "high_risk",
+      "description": "Urgent! Your account has been suspended. Click this link immediately to verify your identity and avoid permanent closure.",
+      "keywords": ["urgent", "suspended", "click", "verify", "immediately"]
+    },
+    {
+      "type": "high_risk", 
+      "description": "Congratulations! You've won the lottery! Send us your bank details to claim your $1,000,000 prize now!",
+      "keywords": ["congratulations", "won", "lottery", "bank details", "prize"]
+    },
+    {
+      "type": "medium_risk",
+      "description": "Your security alert: We noticed unusual activity on your account. Please confirm your details by calling this number.",
+      "keywords": ["security alert", "unusual activity", "confirm"]
+    },
+    {
+      "type": "low_risk",
+      "description": "Thank you for your payment. Your transaction has been processed successfully. Reference number: TX123456789.",
+      "keywords": ["thank you", "payment", "processed", "reference"]
+    }
+  ],
+  "test_scenarios": [
+    {
+      "name": "Verify Known Company",
+      "phone": "+31612345678",
+      "expected": "verified",
+      "company": "Acme Bank"
+    },
+    {
+      "name": "Check Unknown Number", 
+      "phone": "+1234567890",
+      "expected": "not_verified",
+      "company": null
+    },
+    {
+      "name": "Submit High Risk Report",
+      "description": "Urgent verify account suspended click now",
+      "expected_risk": "HIGH"
+    },
+    {
+      "name": "Submit Low Risk Report",
+      "description": "Thank you for your payment confirmation",
+      "expected_risk": "LOW"
+    }
+  ]
+}
