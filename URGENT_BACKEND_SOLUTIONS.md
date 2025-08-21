@@ -47,7 +47,7 @@ Upload the `vercel-backend/` folder to GitHub:
 While you deploy the persistent backend, I'll configure a **stable fallback URL** that works right now:
 
 ### Current Working Backend:
-`https://b175beef-7ded-4a3d-8fd1-e5ba7a9ba148.preview.emergentagent.com`
+`https://vero-check.preview.emergentagent.com`
 
 This backend is:
 - ✅ **Currently online and working**

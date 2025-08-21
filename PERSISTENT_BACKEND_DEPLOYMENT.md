@@ -109,7 +109,7 @@ After deployment:
 ## 📞 EMERGENCY CONTACT
 
 If deployment fails, the temporary backend is still available at:
-`https://b175beef-7ded-4a3d-8fd1-e5ba7a9ba148.preview.emergentagent.com`
+`https://vero-check.preview.emergentagent.com`
 
 But this should only be used as emergency fallback!
 

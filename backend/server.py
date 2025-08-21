@@ -23,7 +23,7 @@ app.add_middleware(
     allow_origins=[
         "https://checkvero.com",
         "https://www.checkvero.com", 
-        "https://b175beef-7ded-4a3d-8fd1-e5ba7a9ba148.preview.emergentagent.com",
+        "https://vero-check.preview.emergentagent.com",
         "http://localhost:3000",  # For development
         "*"  # Fallback for other domains
     ],
@@ -390,7 +390,7 @@ async def cors_test():
         "status": "cors_ok",
         "message": "CORS is working correctly from checkvero.com",
         "timestamp": datetime.utcnow().isoformat(),
-        "backend_url": "https://b175beef-7ded-4a3d-8fd1-e5ba7a9ba148.preview.emergentagent.com"
+        "backend_url": "https://vero-check.preview.emergentagent.com"
     }
 
 @app.post("/api/register", response_model=Token)

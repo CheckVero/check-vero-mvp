@@ -3,7 +3,7 @@
 ## URGENT DEPLOYMENT INSTRUCTIONS FOR CHECKVERO.COM
 
 ### ✅ BACKEND API STATUS
-- **Backend URL**: `https://b175beef-7ded-4a3d-8fd1-e5ba7a9ba148.preview.emergentagent.com`
+- **Backend URL**: `https://vero-check.preview.emergentagent.com`
 - **Status**: ✅ RUNNING and accessible
 - **CORS**: ✅ Configured for checkvero.com
 - **All Endpoints**: ✅ Working and tested
@@ -13,7 +13,7 @@
 Set these in Vercel environment variables for checkvero.com:
 
 ```
-REACT_APP_BACKEND_URL=https://b175beef-7ded-4a3d-8fd1-e5ba7a9ba148.preview.emergentagent.com
+REACT_APP_BACKEND_URL=https://vero-check.preview.emergentagent.com
 NODE_ENV=production
 REACT_APP_ENVIRONMENT=production
 ```
@@ -32,15 +32,15 @@ Run these tests from browser console on checkvero.com:
 
 ```javascript
 // Test 1: Health Check
-fetch('https://b175beef-7ded-4a3d-8fd1-e5ba7a9ba148.preview.emergentagent.com/api/health')
+fetch('https://vero-check.preview.emergentagent.com/api/health')
   .then(r => r.json()).then(console.log)
 
 // Test 2: CORS Test
-fetch('https://b175beef-7ded-4a3d-8fd1-e5ba7a9ba148.preview.emergentagent.com/api/cors-test')
+fetch('https://vero-check.preview.emergentagent.com/api/cors-test')
   .then(r => r.json()).then(console.log)
 
 // Test 3: Phone Verification
-fetch('https://b175beef-7ded-4a3d-8fd1-e5ba7a9ba148.preview.emergentagent.com/api/verify-phone', {
+fetch('https://vero-check.preview.emergentagent.com/api/verify-phone', {
   method: 'POST',
   headers: {'Content-Type': 'application/json'},
   body: JSON.stringify({phone_number: '+31612345678'})
@@ -59,7 +59,7 @@ fetch('https://b175beef-7ded-4a3d-8fd1-e5ba7a9ba148.preview.emergentagent.com/ap
 1. **Set Environment Variable in Vercel**:
    - Go to Vercel Dashboard → checkvero.com project
    - Go to Settings → Environment Variables
-   - Add: `REACT_APP_BACKEND_URL` = `https://b175beef-7ded-4a3d-8fd1-e5ba7a9ba148.preview.emergentagent.com`
+   - Add: `REACT_APP_BACKEND_URL` = `https://vero-check.preview.emergentagent.com`
 
 2. **Redeploy**:
    - Trigger a new deployment in Vercel

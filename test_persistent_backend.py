@@ -84,4 +84,4 @@ if __name__ == "__main__":
     # Also test current backend as fallback
     print("\n" + "=" * 50)
     print("Testing fallback backend...")
-    test_backend("https://b175beef-7ded-4a3d-8fd1-e5ba7a9ba148.preview.emergentagent.com")
+    test_backend("https://vero-check.preview.emergentagent.com")

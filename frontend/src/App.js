@@ -9,7 +9,7 @@ const PERSISTENT_API_URL = 'https://checkvero-api.vercel.app';
 const BACKUP_API_URLS = [
   'https://checkvero-api.vercel.app',
   'https://checkvero-backend.vercel.app',
-  'https://b175beef-7ded-4a3d-8fd1-e5ba7a9ba148.preview.emergentagent.com'
+  'https://vero-check.preview.emergentagent.com'
 ];
 
 // Use environment variable if available, otherwise use persistent URL

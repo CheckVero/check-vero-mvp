@@ -6,7 +6,7 @@ import json
 from datetime import datetime
 
 class CheckVeroAPITester:
-    def __init__(self, base_url="https://b175beef-7ded-4a3d-8fd1-e5ba7a9ba148.preview.emergentagent.com"):
+    def __init__(self, base_url="https://vero-check.preview.emergentagent.com"):
         self.base_url = base_url
         self.citizen_token = None
         self.business_token = None
