@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Check Vero – Verify what reaches you.</title>
+    <meta name="description" content="ICP-native fraud verification platform. Instantly verify legitimate communications from businesses and government agencies while protecting against fraud.">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><path d='M16 2L25 6V14C25 21 20 26 16 28C12 26 7 21 7 14V6L16 2Z' fill='%2300C853'/><circle cx='16' cy='16' r='8' fill='white' opacity='0.9'/><path d='M13 16L15 18L19 14' stroke='%2300C853' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/></svg>">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" class="logo-icon">
+                    <path d="M16 2L25 6V14C25 21 20 26 16 28C12 26 7 21 7 14V6L16 2Z" fill="#00C853"/>
+                    <circle cx="16" cy="16" r="8" fill="#ffffff" opacity="0.9"/>
+                    <path d="M13 16L15 18L19 14" stroke="#00C853" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span class="logo-text">Check Vero</span>
+                <span class="icp-badge">ICP</span>
+            </div>
+            <div class="nav-links">
+                <button class="nav-link" onclick="showSection('home')">Home</button>
+                <button class="nav-link" onclick="showSection('verify')">Verify</button>
+                <button class="nav-link" onclick="showSection('report')">Report</button>
+                <button class="nav-link" onclick="showSection('dashboard')">Dashboard</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Loading Indicator -->
+    <div id="loading" class="loading-overlay">
+        <div class="loading-spinner"></div>
+        <p>Connecting to Internet Computer...</p>
+    </div>
+
+    <!-- Message Display -->
+    <div id="message" class="message hidden"></div>
+
+    <!-- Home Section -->
+    <section id="home-section" class="section active">
+        <div class="hero">
+            <div class="hero-content">
+                <div class="hero-logo">
+                    <svg width="80" height="80" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M16 2L25 6V14C25 21 20 26 16 28C12 26 7 21 7 14V6L16 2Z" fill="#00C853"/>
+                        <circle cx="16" cy="16" r="8" fill="#ffffff" opacity="0.9"/>
+                        <path d="M13 16L15 18L19 14" stroke="#00C853" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <h1>Check Vero</h1>
+                    <p class="icp-tagline">Built on Internet Computer Protocol</p>
+                </div>
+                <h2 class="hero-title">Verify what reaches you — voice, email & AI</h2>
+                <p class="hero-subtitle">
+                    Instantly verify legitimate communications from businesses and government agencies 
+                    while protecting yourself from scams, phishing, and fraudulent interactions.
+                </p>
+                <div class="hero-actions">
+                    <button class="btn btn-primary" onclick="showSection('verify')">Verify a Number</button>
+                    <button class="btn btn-secondary" onclick="showSection('report')">Report Fraud</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="features">
+            <div class="container">
+                <h3>Powered by Internet Computer</h3>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">✅</div>
+                        <h4>Instant Verification</h4>
+                        <p>Get real-time verification with green checkmarks when receiving communications from registered businesses and government agencies.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🔒</div>
+                        <h4>Decentralized Security</h4>
+                        <p>Built on ICP blockchain for maximum security, transparency, and resistance to fraud manipulation.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🏆</div>
+                        <h4>Earn Rewards</h4>
+                        <p>Help protect the community by reporting fraud and earn points for valuable contributions to our security database.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Verify Section -->
+    <section id="verify-section" class="section">
+        <div class="container">
+            <div class="form-card">
+                <h2>Verify Phone Number</h2>
+                <p class="form-subtitle">Check if a phone number is verified by a legitimate business or government agency</p>
+                
+                <form id="verify-form" onsubmit="verifyPhone(event)">
+                    <div class="form-group">
+                        <label>Phone Number</label>
+                        <input type="tel" id="phone-input" placeholder="Enter phone number (e.g., +1234567890)" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <span class="btn-text">Verify Number</span>
+                        <span class="btn-loading hidden">Verifying...</span>
+                    </button>
+                </form>
+
+                <div id="verification-result" class="verification-result hidden"></div>
+
+                <div class="sample-numbers">
+                    <h4>🧪 Sample Numbers for Testing:</h4>
+                    <div class="sample-grid">
+                        <button class="sample-btn" onclick="fillSampleNumber('+31612345678')">
+                            <strong>+31612345678</strong> - Acme Bank
+                        </button>
+                        <button class="sample-btn" onclick="fillSampleNumber('+61298765432')">
+                            <strong>+61298765432</strong> - Gov Australia
+                        </button>
+                        <button class="sample-btn" onclick="fillSampleNumber('+14155552020')">
+                            <strong>+14155552020</strong> - TechCorp Support
+                        </button>
+                        <button class="sample-btn" onclick="fillSampleNumber('+442071234567')">
+                            <strong>+442071234567</strong> - British Telecom
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Report Section -->
+    <section id="report-section" class="section">
+        <div class="container">
+            <div class="form-card">
+                <h2>Report Suspicious Communication</h2>
+                <p class="form-subtitle">Help protect others by reporting suspicious calls, emails, or AI messages</p>
+                
+                <form id="report-form" onsubmit="submitReport(event)">
+                    <div class="form-group">
+                        <label>Type of Communication</label>
+                        <select id="report-type">
+                            <option value="call">Suspicious Call</option>
+                            <option value="email">Suspicious Email</option>
+                            <option value="ai_chat">Suspicious AI Chat</option>
+                        </select>
+                    </div>
+                    <div class="form-group" id="phone-group">
+                        <label>Phone Number (optional)</label>
+                        <input type="tel" id="report-phone" placeholder="Phone number">
+                    </div>
+                    <div class="form-group" id="email-group" style="display: none;">
+                        <label>Email Address (optional)</label>
+                        <input type="email" id="report-email" placeholder="Email address">
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea id="report-description" placeholder="Describe the suspicious communication in detail..." rows="4" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <span class="btn-text">Submit Report</span>
+                        <span class="btn-loading hidden">Analyzing Report...</span>
+                    </button>
+                </form>
+
+                <div id="report-result" class="report-result hidden"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Dashboard Section -->
+    <section id="dashboard-section" class="section">
+        <div class="container">
+            <h2>System Dashboard</h2>
+            <p class="dashboard-subtitle">Internet Computer Protocol Analytics</p>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">👥</div>
+                    <div class="stat-value" id="total-users">-</div>
+                    <div class="stat-label">Total Users</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">📞</div>
+                    <div class="stat-value" id="total-phones">-</div>
+                    <div class="stat-label">Verified Numbers</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">📊</div>
+                    <div class="stat-value" id="total-reports">-</div>
+                    <div class="stat-label">Fraud Reports</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🚨</div>
+                    <div class="stat-value" id="high-risk-reports">-</div>
+                    <div class="stat-label">High Risk Detected</div>
+                </div>
+            </div>
+
+            <div class="dashboard-grid">
+                <div class="dashboard-card">
+                    <h3>Recent Verifications</h3>
+                    <div id="recent-verifications" class="activity-list">
+                        <div class="activity-item">
+                            <span class="activity-icon">✅</span>
+                            <div>
+                                <div>+31612345678 verified</div>
+                                <small>Acme Bank - 2 min ago</small>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <span class="activity-icon">✅</span>
+                            <div>
+                                <div>+61298765432 verified</div>
+                                <small>Gov Australia - 5 min ago</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="dashboard-card">
+                    <h3>ICP Network Status</h3>
+                    <div class="network-status">
+                        <div class="status-item">
+                            <span class="status-indicator online"></span>
+                            <span>Canister Status: Online</span>
+                        </div>
+                        <div class="status-item">
+                            <span class="status-indicator online"></span>
+                            <span>ICP Network: Connected</span>
+                        </div>
+                        <div class="status-item">
+                            <span class="status-indicator online"></span>
+                            <span>Cycles Balance: Healthy</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="app.js"></script>
+</body>
+</html>
