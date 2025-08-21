@@ -23,7 +23,6 @@ app.add_middleware(
     allow_origins=[
         "https://checkvero.com",
         "https://www.checkvero.com", 
-        "https://vero-check.preview.emergentagent.com",
         "http://localhost:3000",  # For development
         "*"  # Fallback for other domains
     ],
