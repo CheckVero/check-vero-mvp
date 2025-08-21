@@ -6,6 +6,8 @@ import Result "mo:base/Result";
 import Time "mo:base/Time";
 import Option "mo:base/Option";
 import Buffer "mo:base/Buffer";
+import Iter "mo:base/Iter";
+import Nat "mo:base/Nat";
 
 actor CheckVero {
     
@@ -130,9 +132,9 @@ actor CheckVero {
     
     // System upgrade hooks
     system func preupgrade() {
-        userEntries := users.entries() |> Iter.toArray(_);
-        phoneEntries := phoneNumbers.entries() |> Iter.toArray(_);
-        reportEntries := fraudReports.entries() |> Iter.toArray(_);
+        userEntries := Iter.toArray(users.entries());
+        phoneEntries := Iter.toArray(phoneNumbers.entries());
+        reportEntries := Iter.toArray(fraudReports.entries());
     };
     
     system func postupgrade() {
@@ -169,7 +171,13 @@ actor CheckVero {
     private func analyzeReport(description: Text, phoneNumber: ?Text) : (Text, Text, Nat) {
         let suspiciousWords = ["urgent", "click now", "verify account", "suspended", "prize", "winner", "lottery"];
         var riskScore = 0;
-        let lowerDesc = Text.toLowercase(description);
+        let lowerDesc = Text.map(description, func (c: Char) : Char {
+            if (c >= 'A' and c <= 'Z') {
+                Char.fromNat32(Char.toNat32(c) + 32)
+            } else {
+                c
+            }
+        });
         
         for (word in suspiciousWords.vals()) {
             if (Text.contains(lowerDesc, #text word)) {
@@ -194,7 +202,7 @@ actor CheckVero {
     };
     
     public func registerUser(username: Text, email: Text, role: UserRole, companyName: ?Text) : async ApiResponse<User> {
-        let caller = Principal.toText(Principal.fromActor(CheckVero)); // In real implementation, use msg.caller
+        let caller = Principal.fromActor(CheckVero); // In real implementation, use msg.caller
         let userId = generateId("user", nextUserId);
         nextUserId += 1;
         
@@ -207,7 +215,7 @@ actor CheckVero {
         
         let newUser : User = {
             id = userId;
-            principal = Principal.fromText(caller);
+            principal = caller;
             username = username;
             email = email;
             role = role;
@@ -218,7 +226,7 @@ actor CheckVero {
         };
         
         users.put(userId, newUser);
-        userPrincipals.put(Principal.fromText(caller), userId);
+        userPrincipals.put(caller, userId);
         
         #ok(newUser)
     };
@@ -276,7 +284,7 @@ actor CheckVero {
         }
     };
     
-    public func verifyPhoneNumber(phoneNumber: Text) : async ApiResponse<{company_name: Text; description: ?Text; is_verified: Bool; message: Text}> {
+    public func verifyPhoneNumber(phoneNumber: Text) : async ApiResponse<{company_name: Text; description: ?Text; is_verified: Bool; message: Text; verified_since: Int; verification_count: Nat}> {
         switch (phoneNumbers.get(phoneNumber)) {
             case (?phone) {
                 // Update verification count
@@ -298,6 +306,8 @@ actor CheckVero {
                     description = phone.description;
                     is_verified = true;
                     message = "✅ This number is verified and belongs to " # phone.company_name;
+                    verified_since = phone.verification_date;
+                    verification_count = phone.verification_count + 1;
                 })
             };
             case null {
@@ -306,17 +316,19 @@ actor CheckVero {
                     description = null;
                     is_verified = false;
                     message = "❌ This number is not registered. Proceed with caution.";
+                    verified_since = 0;
+                    verification_count = 0;
                 })
             };
         }
     };
     
     public query func getRegisteredPhoneNumbers() : async [PhoneNumber] {
-        phoneNumbers.vals() |> Iter.toArray(_)
+        Iter.toArray(phoneNumbers.vals())
     };
     
     // Fraud Reporting
-    public func submitFraudReport(reportType: ReportType, phoneNumber: ?Text, emailAddress: ?Text, description: Text) : async ApiResponse<FraudReport> {
+    public func submitFraudReport(reportType: ReportType, phoneNumber: ?Text, emailAddress: ?Text, description: Text) : async ApiResponse<{report: FraudReport; ai_analysis: {risk_level: Text; recommendation: Text; confidence_score: Nat; points_awarded: Nat; reasons: [Text]}}> {
         let caller = Principal.fromActor(CheckVero);
         
         switch (getCurrentUser(caller)) {
@@ -359,14 +371,24 @@ actor CheckVero {
                 };
                 users.put(user.id, updatedUser);
                 
-                #ok(newReport)
+                let aiAnalysis = {
+                    risk_level = riskLevel;
+                    recommendation = recommendation;
+                    confidence_score = if (riskLevel == "HIGH") 85 else if (riskLevel == "MEDIUM") 60 else 30;
+                    points_awarded = pointsAwarded;
+                    reasons = if (riskLevel == "HIGH") ["Multiple suspicious keywords detected", "Pattern matches known scam techniques"] 
+                             else if (riskLevel == "MEDIUM") ["Some suspicious language detected"]
+                             else ["No obvious red flags identified"];
+                };
+                
+                #ok({report = newReport; ai_analysis = aiAnalysis})
             };
             case null { #err("User not authenticated") };
         }
     };
     
     public query func getFraudReports() : async [FraudReport] {
-        fraudReports.vals() |> Iter.toArray(_)
+        Iter.toArray(fraudReports.vals())
     };
     
     public query func getUserFraudReports(userId: Text) : async [FraudReport] {
@@ -376,7 +398,7 @@ actor CheckVero {
                 userReports.add(report);
             };
         };
-        userReports.toArray()
+        Buffer.toArray(userReports)
     };
     
     // Statistics and Analytics
@@ -421,9 +443,66 @@ actor CheckVero {
         }
     };
     
+    // Dashboard Statistics
+    public query func getDashboardStats(userId: Text) : async ApiResponse<{
+        total_reports: Nat;
+        points_earned: Nat;
+        high_risk_reports: Nat;
+        registered_numbers: Nat;
+        verification_checks: Nat;
+        reports_mentioning: Nat;
+        total_users: Nat;
+        total_phone_numbers: Nat;
+    }> {
+        switch (users.get(userId)) {
+            case (?user) {
+                var userReports = 0;
+                var userHighRisk = 0;
+                var registeredNumbers = 0;
+                var verificationChecks = 0;
+                var reportsMentioning = 0;
+                
+                // Count user reports
+                for (report in fraudReports.vals()) {
+                    if (report.user_id == userId) {
+                        userReports += 1;
+                        if (report.risk_level == "HIGH") {
+                            userHighRisk += 1;
+                        };
+                    };
+                };
+                
+                // Count registered numbers (for businesses)
+                for (phone in phoneNumbers.vals()) {
+                    if (phone.registered_by == userId) {
+                        registeredNumbers += 1;
+                        verificationChecks += phone.verification_count;
+                    };
+                };
+                
+                #ok({
+                    total_reports = userReports;
+                    points_earned = user.points;
+                    high_risk_reports = userHighRisk;
+                    registered_numbers = registeredNumbers;
+                    verification_checks = verificationChecks;
+                    reports_mentioning = reportsMentioning;
+                    total_users = users.size();
+                    total_phone_numbers = phoneNumbers.size();
+                })
+            };
+            case null { #err("User not found") };
+        }
+    };
+    
     // Initialize sample data on first deployment
     public func initializeSampleDataPublic() : async Text {
         initializeSampleData();
         "Sample data initialized successfully"
+    };
+    
+    // Health check
+    public query func health() : async Text {
+        "Check Vero ICP Backend - Running"
     };
 }
