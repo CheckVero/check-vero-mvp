@@ -1,0 +1,3 @@
+*.mo linguist-language=Motoko
+*.js linguist-language=JavaScript
+/frontend/* linguist-vendored
