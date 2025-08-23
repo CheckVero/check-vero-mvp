@@ -4,7 +4,7 @@
   "canisters": {
     "check_vero_backend": {
       "type": "motoko",
-      "main": "src/main.mo"
+      "main": "check-vero-icp/src/main.mo"
     },
     "check_vero_frontend": {
       "type": "assets",
