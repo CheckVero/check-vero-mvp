@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "dfx": "0.15.0",
+  "dfx": "0.29.0",
   "canisters": {
     "check_vero_backend": {
       "type": "motoko",
