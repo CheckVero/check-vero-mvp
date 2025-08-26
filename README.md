@@ -14,6 +14,35 @@ Next steps:
 - Q1 2026 → Pilot launch with bank partner  
 - Expansion into email, SMS, AI verification  
 
+## 🔧 DFX & Backend (for judges)
+
+**Live backend (Candid UI on ICP)**  
+- Canister ID: `i7oig-rqaaa-aaaad-aanwa-cai`  
+- Candid UI: https://a4gq6-oaaaa-aaaab-qaa4q-cai.icp0.io/?id=i7oig-rqaaa-aaaad-aanwa-cai  
+- Status: running on mainnet (IC)
+
+**dfx.json (in repo)**
+```json
+{
+  "version": 1,
+  "dfx": "0.29.0",
+  "canisters": {
+    "check_vero_backend": {
+      "type": "motoko",
+      "main": "check-vero-icp/src/main.mo"
+    },
+    "check_vero_frontend": {
+      "type": "assets",
+      "source": ["frontend/"]
+    }
+  },
+  "networks": {
+    "local": { "bind": "127.0.0.1:4943", "type": "ephemeral" },
+    "ic":    { "providers": ["https://ic0.app"], "type": "persistent" }
+  },
+  "output_env_file": ".env"
+}
+
 ---
 
 ## 📖 Project Overview
