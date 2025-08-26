@@ -1,3 +1,23 @@
+# ✅ Check Vero – The AI-native Trust Layer for Digital Communication  
+
+## 🆕 Milestone Update – August 2025
+Since the last submission, we delivered:
+- 🎥 Pitch Video (covering team, problem, solution, business model, roadmap)
+- 📑 Executive Summary added to Dora BUIDL profile
+- 🔧 Updated dfx.json configuration (fully functional)
+- 🔐 Migrated from Plug Wallet (PoC) → Oisy Wallet (planned for production)
+- 🖥️ Business Model refined: stake $VERO + monthly fiat fee, with ICP rewards for consumers
+- 🚀 Roadmap updated with confirmed pilot (Dutch bank, AU branch, Q1 2026)
+
+Next steps:
+- Q4 2025 → Token launch & DAO structure  
+- Q1 2026 → Pilot launch with bank partner  
+- Expansion into email, SMS, AI verification  
+
+---
+
+## 📖 Project Overview
+
 # ✅ Check Vero – The AI-native Trust Layer for Digital Communication
 
 ![Built on ICP](https://img.shields.io/badge/Built_on-ICP-blueviolet)
