@@ -86,7 +86,9 @@ This submission represents a mission-driven prototype — combining:
 
 ## 📽️ How it works
 
-🎬 [Watch our 1-min explainer video](https://youtu.be/t5GM6bhTZuA)
+– 🎬 [Watch our 1-min explainer video](https://youtu.be/t5GM6bhTZuA)
+– 🎥 [Pitch Video — Check Vero](https://www.loom.com/share/483f2be9434d4567b8a7820e6242b842?sid=96f2baa5-a2e2-42d3-9a6c-e01a90eecb01)
+– 🎥 [Demo Video — Check Vero MVP on ICP](https://www.loom.com/share/483f2be9434d4567b8a7820e6242b842?sid=96f2baa5-a2e2-42d3-9a6c-e01a90eecb01)
 
 ---
 
