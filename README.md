@@ -14,7 +14,7 @@ Next steps:
 - Q1 2026 → Pilot launch with bank partner  
 - Expansion into email, SMS, AI verification  
 
-## 🔧 DFX & Backend (for judges)
+## 🔧 DFX & Backend
 
 **Live backend (Candid UI on ICP)**  
 - Canister ID: `i7oig-rqaaa-aaaad-aanwa-cai`  
