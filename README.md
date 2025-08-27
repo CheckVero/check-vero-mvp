@@ -84,7 +84,7 @@ This submission represents a mission-driven prototype — combining:
 
 ---
 
-## 📽️ Demo
+## 📽️ How it works
 
 🎬 [Watch our 1-min explainer video](https://youtu.be/t5GM6bhTZuA)
 
