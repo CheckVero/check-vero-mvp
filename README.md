@@ -1,177 +1,213 @@
-# ✅ Check Vero – The AI-native Trust Layer for Digital Communication  
+# ✅ Check Vero — The AI-Native Trust Layer for Digital Communication
 
-## 🆕 Milestone Update – August 2025
-Since the last submission, we delivered:
-- 🎥 Pitch Video (covering team, problem, solution, business model, roadmap)
-- 📑 Executive Summary added to Dora BUIDL profile
-- 🔧 Updated dfx.json configuration (fully functional)
-- 🔐 Migrated from Plug Wallet (PoC) → Oisy Wallet (planned for production)
-- 🖥️ Business Model refined: stake $VERO + monthly fiat fee, with ICP rewards for consumers
-- 🚀 Roadmap updated with confirmed pilot (Dutch bank, AU branch, Q1 2026)
+**Check Vero** provides cryptographic verification for real-time communication — starting with **phone calls** — so banks, governments and platforms can prove authenticity **before** a conversation begins. Built on the **Internet Computer (ICP)** with sub-second verification and tamper-evident audit logs.
 
-Next steps:
-- Q4 2025 → Token launch & DAO structure  
-- Q1 2026 → Pilot launch with bank partner  
-- Expansion into email, SMS, AI verification  
-
-## 🔧 DFX & Backend
-
-**Live backend (Candid UI on ICP)**  
-- Canister ID: `i7oig-rqaaa-aaaad-aanwa-cai`  
-- Candid UI: https://a4gq6-oaaaa-aaaab-qaa4q-cai.icp0.io/?id=i7oig-rqaaa-aaaad-aanwa-cai  
-- Status: running on mainnet (IC)
-
-
-## 📖 Project Overview
-
-# ✅ Check Vero – The AI-native Trust Layer for Digital Communication
-
-![Built on ICP](https://img.shields.io/badge/Built_on-ICP-blueviolet)
-![Hackathon Submission](https://img.shields.io/badge/DoraHacks_x_DFINITY-orange)
-![Live on Fleek](https://img.shields.io/badge/Live_on-Fleek-brightgreen)
-
-**Check Vero** is a decentralized verification protocol for real-time communication – starting with phone calls.
-
-In a world of AI voice scams and deepfake messages, Check Vero verifies the **signal**, not just the sender.
+* **Website (live MVP):** [https://checkvero.org](https://checkvero.org)
+* **Contact:** [hello@checkvero.org](mailto:hello@checkvero.org)
 
 ---
 
-## 🔍 Use Case
+## 🚥 Status — September 2025
 
-– Real-time caller verification (banks, governments, platforms)  
-– AI-assisted risk & intent analysis  
-– Signal-staking via the $VERO token  
-– Originally submitted as a 15K DFINITY grant proposal (not awarded)  
-– Now reapplying for 25K with improved MVP and real-world validation  
-– Pilot commitment secured with Dutch bank (Australia branch): customers will receive email invitation to test the app  
-– Public subsidy in preparation via awareness programs in both the Netherlands 🇳🇱 and Australia 🇦🇺
+* **MVP live:** registry-based phone-number verification with on-chain audit proofs (ICP).
+* **Pilot-ready:** web app + API/webhook pattern for CPaaS/carriers (Twilio/KPN-style).
+* **Wallet:** **Oisy Wallet** for auth/identity (Plug was PoC only).
+* **Privacy-first:** no call content, no PII — **E.164 → SHA-256 + pepper**, K-anonymity, Argon2id for salt management.
+* **Compliance copy:** Designed to meet **SOC 2 Type II controls**. **Targeting 99.9% uptime**.
 
 ---
 
-## 🧱 Built on Internet Computer (ICP)
+## 🗺️ Product Roadmap (September 2025)
 
-– ✅ Modular canister-based architecture  
-– ✅ Plug Wallet integration (used in early PoC)  
-– ✅ Oisy Wallet integration planned for production  
-– ✅ Internet Identity compatible  
-– ✅ Fully open-source and trustless by design
+**Q1 2025 — Completed · Core Platform Foundation**
 
----
+* Core phone-number verification, org management & RBAC
+* SHA-256 + pepper cryptographic security
+* Comprehensive audit logging, rate limiting & abuse prevention
 
-## 📦 MVP Features (Hackathon Scope)
+**Q2 2025 — Completed · Security & Privacy Enhancement**
 
-| Feature                        | Status         | Notes                                                                 |
-|-------------------------------|----------------|-----------------------------------------------------------------------|
-| Caller ID Canister (Motoko)   | ✅ Previously tested | Built & tested in early version; re-deploying in Q3               |
-| Plug Wallet Auth              | 🧪 Demo ready   | Functional in mockup (PoC); production version will use Oisy Wallet |
-| Shield UI (Web)               | 🧪 Designed     | Front-end mockup complete (v0.1)                                     |
-| Reputation Logic              | 🔜 Planned      | Trust scoring based on signal context & caller type                 |
-| DAO Architecture (v0.1)       | ✅ Documented   | Legal & governance structure defined (see PDF)                       |
-| AI-Intent Scoring (Demo)      | 🔜 Planned      | Early-phase intent detection concept via metadata                    |
+* Argon2id (per-tenant salts), K-anonymity & number masking
+* Salt rotation capabilities, SOC 2 Type II controls (design)
+* ZK scaffolding (disabled by default)
 
----
+**Q3 2025 — In Progress · SVC & Enterprise Integration**
 
-## 📜 Background
+* SVC backend with SIP integration
+* Twilio/KPN-style webhooks; STIR/SHAKEN-complementary positioning
+* Enhanced dashboard + bulk verification endpoints
 
-A previous DFINITY grant application (15K tier) was submitted with a full milestone plan.  
-Although not selected (likely due to tier fit), we’ve since refined the project and are reapplying for the **25K tier** with a sharper technical focus.
+**Q4 2025 — Planned · AI & Community Features**
 
-This submission represents a mission-driven prototype — combining:
+* ML-based fraud detection models
+* Community scam reporting with **ICP** rewards
+* Advanced risk/behavioral scoring
+* **VERO** token for governance & staking
+* C2PA integration for content authenticity
 
-– Clear technical architecture  
-– A working brand + ecosystem vision  
-– Real-world pilot alignment
+**2026+ — Future · Enterprise Scale & Compliance**
 
----
-
-## 📽️ How it works
-
-– 🎬 [Watch our 1-min explainer video](https://youtu.be/t5GM6bhTZuA)
-– 🎥 [Pitch Video — Check Vero](https://www.loom.com/share/483f2be9434d4567b8a7820e6242b842?sid=96f2baa5-a2e2-42d3-9a6c-e01a90eecb01)
-– 🎥 [Demo Video — Check Vero MVP on ICP](https://www.loom.com/share/483f2be9434d4567b8a7820e6242b842?sid=96f2baa5-a2e2-42d3-9a6c-e01a90eecb01)
+* ZK proofs, multi-region/data-residency
+* Deeper IdP integrations & custom compliance reporting
+* Telecom integrations at scale
 
 ---
 
-## 🧪 Tech Stack
+## 🧩 What We Verify
 
-– Motoko / ICP Canisters  
-– Plug Wallet (early PoC)  
-– Oisy Wallet (planned)  
-– Web (Shield UI)  
-– Figma (UX/UI)  
-– GitHub Pages / Webhash (frontend)
+* **Phone calls:** “Verified by Check Vero” signal + on-chain proof
+* **Next:** email, SMS, and AI-agent output (same verification pattern)
+
+We verify the **signal**, not just the sender — a pragmatic defense against spoofing & AI-voice scams.
 
 ---
 
-## 🌐 Links
+## 🔌 Integration Pattern (Carrier/CPaaS)
 
-– Mission: [https://checkvero.org](https://checkvero.org)  
-– Business Tools: [https://checkvero.com](https://checkvero.com)
+**SIP header hint**
+
+```
+X-CheckVero-Hint: key_id=..., ts=..., nonce=..., sig=...
+```
+
+**Webhook (example)**
+
+```json
+// POST /webhook/check
+{
+  "e164": "+31201234567",
+  "ts": 1726501000,
+  "nonce": "b3d1...",
+  "sig": "ed25519:..."
+}
+```
+
+**Response**
+
+```json
+{ "status": "verified", "trace_id": "cv_01H..." }
+```
+
+**Operational SLOs**
+
+* Latency targets: **p50 < 200ms**, **p95 < 300ms**, **p99 < 400ms**
+* Rate limiting: configurable defaults (**5 rps, burst 10**) with HTTP **429 backoff**
+
+**Compliance guardrails (global wording)**
+
+* *Designed to meet SOC 2 Type II controls.*
+* *Targeting 99.9% uptime.*
+* *Raw numbers are never stored (E.164 → SHA-256 + pepper).*
+* *Rate limiting: configurable defaults (e.g., 5 rps, burst 10).*
 
 ---
 
-## 🔗 Live Demo
+## 🧱 Built on ICP (Tech)
 
-🎥 [Try the live ICP demo here](https://www.checkvero.com)
+* Canister architecture (Motoko), immutable audit logs
+* Oisy Wallet (production), Internet Identity compatible
+* Low-latency queries; no external DB required
 
-This project runs live on ICP with a functional demo for verifying trusted caller signals.
+> **Candid UI (how to open):**
+
+```bash
+# after deploying to mainnet:
+CANISTER=$(dfx canister --network ic id <backend-name>)
+echo "https://a4gq6-oaaaa-aaaab-qaa4q-cai.icp0.io/?id=$CANISTER"
+echo "https://a4gq6-oaaaa-aaaab-qaa4q-cai.ic0.app/?id=$CANISTER"
+```
+
+*(Avoid hard-coding IDs; they change on redeploys.)*
 
 ---
 
-## 👥 Team
+## 🧪 MVP Feature Matrix
 
-- **Marceo** – Founder, Product Lead  
-- **Julia** – Strategic & Legal Advisor  
-📬 Reach us at: [hello@checkvero.org](mailto:hello@checkvero.org)
+| Feature                     | Status           | Notes                                       |
+| --------------------------- | ---------------- | ------------------------------------------- |
+| Registry phone verification | **Live**         | Verified/Unverified + on-chain audit        |
+| SVC (SIP) backend           | **In progress**  | CPaaS/webhook pattern; STIR/SHAKEN-friendly |
+| Shield UI (web)             | **Live (MVP)**   | Public site + docs at checkvero.org         |
+| Oisy Wallet auth            | **Live**         | Production wallet; replaces Plug PoC        |
+| Risk & intent scoring (AI)  | **Planned (Q4)** | Models + behavior analysis                  |
+| DAO/governance (v0.1)       | **Documented**   | Token governance framework (Q4)             |
 
 ---
 
-## ✅ ICP Demo MVP (Hackathon Submission)
+## 💠 Token Model (Short)
 
-This MVP simulates real-time phone number verification using a **Motoko backend** and a **HTML/JS frontend**. It is built natively for the Internet Computer, ready for grant review and hackathon presentation.
+* **\$VERO utility/governance**
 
-### 🧱 Structure
+  * **Stake for access** (tiers: Solo 1k · SME 5k · Enterprise 25k+ VERO)
+  * **Fiat subscriptions → market-buy VERO → split:** **60% burn / 40% Foundation** (ops, security, ecosystem)
+  * **User rewards are paid in ICP** (for verified scam reports)
+  * VERO is **not** a payout token
 
-- `main.mo`: Motoko backend verifying known phone numbers (`+31612345678`, `+61298765432`)
-- `index.html`: Simple UI with input field + ✅ verify button
-- `dfx.json`: Defines frontend/backend for Fleek or CLI deployment
-- `Oisy Wallet`: Identity support planned (placeholder)
+* **TGE (target): Q4 2025**
 
-### 🌐 Live Preview
+  * Seed **\$0.04** · Public **\$0.10**
+  * Vesting (investors): **15% @TGE + 12m linear**
 
-- ✅ [checkvero.com](https://checkvero.com)
-- Hosted via Fleek (auto-deploy from GitHub)
+*(Full details in Token Allocation & SAFT.)*
 
-### 🚀 Deployment Instructions
+---
 
-To deploy this MVP via [Fleek](https://fleek.xyz):
+## 📽️ Media
 
-1. Upload this repo to GitHub  
-2. Connect repo to Fleek  
-3. Use the following settings:
+Some embedded videos show an older UI. The current production flow is live at **checkvero.org**.
 
-| Setting               | Value                        |
-|-----------------------|------------------------------|
-| **Branch**            | `main`                       |
-| **Framework**         | `Other`                      |
-| **Publish directory** | `src/check_vero_frontend`    |
-| **Build command**     | *(leave empty)*              |
+* Pitch / Demo / Explainer: **\[https://youtu.be/t5GM6bhTZuA?si=XMPmQIabUKDSa-ig]**
 
-Once deployed, the dApp runs fully on ICP.
+---
 
-### ⚙️ Local Development
+## 🛠️ Dev Quickstart
 
-To test locally with DFX:
+**Local**
 
 ```bash
 dfx start --background
 dfx deploy
 ```
 
-### 📞 Test Numbers
+**Fleek (static frontend)**
 
-| Phone Number     | Result          |
-|------------------|------------------|
-| `+31612345678`   | ✅ Acme Bank     |
-| `+61298765432`   | ✅ Gov Australia |
-| _Any other_      | ❌ Not registered |
+```
+Branch: main
+Framework: Other
+Publish directory: src/check_vero_frontend
+Build command: (leave empty)
+```
+
+---
+
+## 🔗 Links
+
+* **Website (MVP & docs):** [https://checkvero.org](https://checkvero.org)
+* **GitHub org/repo:** \[add your repo link]
+* **Investor Pack:** \[link to release or folder]
+
+---
+
+## 👥 Team & Contact
+
+* **Marcel van den Berg** — Founder, Product
+* **Julia Ninck Blok** — Strategic & Legal Advisor
+* General: **[hello@checkvero.org](mailto:hello@checkvero.org)**
+* Partnerships (gov/bank/telco/CPaaS): **[partners@checkvero.org](mailto:partners@checkvero.org)**
+
+---
+
+## ⚖️ Legal
+
+* No U.S. persons / OFAC-sanctioned entities (token docs).
+* This repository describes a verification protocol and utility/governance token. Nothing here is investment advice or a public offering.
+
+---
+
+## 🤝 Contributing
+
+Issues and PRs welcome. For security disclosures: **[security@checkvero.org](mailto:security@checkvero.org)**.
+
+---
+
+**Check Vero runs on-chain, open & unstoppable — part of the DFINITY ecosystem.**
